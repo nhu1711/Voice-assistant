@@ -78,6 +78,21 @@ public class PermissionHelper {
      * Kiểm tra tất cả quyền cần thiết cho UC-01
      */
     public static boolean hasAllPermissionsForVoiceCommand(Context context) {
-        return hasRecordAudioPermission(context) && hasCallPhonePermission(context);
+        return hasRecordAudioPermission(context) && hasCallPhonePermission(context) && hasReadContactsPermission(context);
+    }
+
+    /**
+     * Yêu cầu tất cả các quyền cần thiết ngay khi khởi động
+     */
+    public static void requestAllPermissions(Activity activity) {
+        ActivityCompat.requestPermissions(
+            activity,
+            new String[]{
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_CONTACTS
+            },
+            AppConstants.REQUEST_RECORD_AUDIO // Có thể dùng một code chung
+        );
     }
 }

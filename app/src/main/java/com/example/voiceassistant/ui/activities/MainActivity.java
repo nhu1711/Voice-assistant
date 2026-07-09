@@ -10,6 +10,7 @@ import com.example.voiceassistant.ui.fragments.CameraFragment;
 import com.example.voiceassistant.ui.fragments.ContactsFragment;
 import com.example.voiceassistant.ui.fragments.HomeFragment;
 import com.example.voiceassistant.ui.fragments.SettingsFragment;
+import com.example.voiceassistant.permissions.PermissionHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Yêu cầu tất cả các quyền cần thiết ngay khi vào ứng dụng
+        PermissionHelper.requestAllPermissions(this);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {

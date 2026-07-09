@@ -1,5 +1,8 @@
 package com.example.voiceassistant.ui.fragments;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -50,6 +53,8 @@ public class HomeFragment extends Fragment {
     private ContactManager contactManager;
     private CallManager callManager;
 
+    private ObjectAnimator pulseAnimator;
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable timeUpdater = new Runnable() {
         @Override
@@ -84,6 +89,16 @@ public class HomeFragment extends Fragment {
     private void initManagers() {
         Context context = requireContext();
         
+        // Setup Pulse Animation
+        pulseAnimator = ObjectAnimator.ofPropertyValuesHolder(
+                btnMicro,
+                PropertyValuesHolder.ofFloat("scaleX", 1.2f),
+                PropertyValuesHolder.ofFloat("scaleY", 1.2f)
+        );
+        pulseAnimator.setDuration(500);
+        pulseAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        pulseAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
         ttsManager = new TTSManager(context, new TTSManager.TTSListener() {
             @Override
             public void onSpeechStarted() {}
@@ -100,7 +115,10 @@ public class HomeFragment extends Fragment {
         speechRecognizerManager = new SpeechRecognizerManager(context, new SpeechRecognizerManager.RecognitionCallback() {
             @Override
             public void onReadyForSpeech() {
-                updateUI(() -> tvStatus.setText(R.string.response_hint));
+                updateUI(() -> {
+                    tvStatus.setText(R.string.response_hint);
+                    startPulseAnimation();
+                });
             }
 
             @Override
@@ -110,13 +128,17 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onEndOfSpeech() {
-                updateUI(() -> tvStatus.setText(getString(R.string.status_title)));
+                updateUI(() -> {
+                    tvStatus.setText(getString(R.string.status_title));
+                    stopPulseAnimation();
+                });
             }
 
             @Override
             public void onResult(String recognizedText) {
                 Log.d(TAG, "Speech Result Received: " + recognizedText);
                 updateUI(() -> {
+                    stopPulseAnimation();
                     tvCommand.setText(recognizedText);
                     tvStatus.setText(getString(R.string.status_title));
                     processVoiceCommand(recognizedText);
@@ -127,6 +149,7 @@ public class HomeFragment extends Fragment {
             public void onError(String errorMessage) {
                 Log.e(TAG, "Speech Error: " + errorMessage);
                 updateUI(() -> {
+                    stopPulseAnimation();
                     String currentText = tvCommand.getText().toString();
                     // Nếu máy báo lỗi nhưng chúng ta đã có kết quả tạm thời khá dài (ví dụ > 5 ký tự)
                     // thì thử xử lý luôn lệnh đó thay vì báo lỗi.
@@ -155,7 +178,12 @@ public class HomeFragment extends Fragment {
                 PermissionHelper.requestRecordAudioPermission(requireActivity());
                 return;
             }
-            startVoiceRecognition();
+            
+            if (speechRecognizerManager.isListening()) {
+                stopVoiceRecognition();
+            } else {
+                startVoiceRecognition();
+            }
         });
 
         btnSOS.setOnClickListener(v -> {
@@ -169,7 +197,31 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Speech recognition not available", Toast.LENGTH_SHORT).show();
             return;
         }
+        // Làm sạch ô văn bản trước khi nghe mới
+        tvCommand.setText("");
+        tvResponse.setText("");
+        
         speechRecognizerManager.startListening();
+    }
+
+    private void stopVoiceRecognition() {
+        speechRecognizerManager.stopListening();
+        stopPulseAnimation();
+        tvStatus.setText(getString(R.string.status_title));
+    }
+
+    private void startPulseAnimation() {
+        if (pulseAnimator != null && !pulseAnimator.isRunning()) {
+            pulseAnimator.start();
+        }
+    }
+
+    private void stopPulseAnimation() {
+        if (pulseAnimator != null) {
+            pulseAnimator.cancel();
+            btnMicro.setScaleX(1f);
+            btnMicro.setScaleY(1f);
+        }
     }
 
     private void processVoiceCommand(String text) {
