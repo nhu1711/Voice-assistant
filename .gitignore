@@ -22,7 +22,9 @@ release/
 # Gradle files
 .gradle/
 build/
-gradle/
+# Gradle wrapper (chỉ bỏ qua file wrapper, giữ lại versions.toml)
+gradle/wrapper/
+!gradle/libs.versions.toml
 !gradle/wrapper/gradle-wrapper.jar
 local.properties
 gradle-wrapper.properties
