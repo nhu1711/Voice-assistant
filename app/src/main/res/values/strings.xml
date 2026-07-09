@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Voice Assistant</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_contacts">Emergency</string>
+    <string name="nav_camera">Camera</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="status_title">Voice Assistant</string>
+    <string name="battery_status">Battery: %1$d%%</string>
+    <string name="press_to_speak">PRESS TO SPEAK</string>
+    <string name="sos_button">SOS EMERGENCY</string>
+    <string name="command_hint">"Your command"</string>
+    <string name="response_hint">Waiting for command…</string>
+    <string name="calling_contact">Calling %1$s</string>
+    <string name="contact_not_found">Contact %1$s not found</string>
+    <string name="time_response">Current time is %1$s</string>
+    <string name="error_not_understand">I don’t understand your command</string>
+
+    <string name="camera_title">Object Detection</string>
+    <string name="detection_result">Result: %1$s</string>
+    <string name="analyzing">Analyzing…</string>
+
+    <string name="contacts_title">Emergency Contacts</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="empty_contacts">No emergency contacts yet</string>
+    <string name="priority_label">Priority: %1$d</string>
+    <string name="delete_contact">Delete contact</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="tts_speed">SPEECH RATE</string>
+    <string name="volume">VOLUME</string>
+    <string name="language">LANGUAGE</string>
+    <string name="vi_language">Vietnamese</string>
+    <string name="en_language">English</string>
+    <string name="object_detection_toggle">OBJECT DETECTION</string>
+    <string name="battery_warning_toggle">LOW BATTERY WARNING</string>
+    <string name="sos_delay">SOS DELAY</string>
+    <string name="seconds_unit">%1$d seconds</string>
+</resources>

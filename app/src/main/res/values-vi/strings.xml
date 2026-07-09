@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Trợ lý giọng nói</string>
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_contacts">Khẩn cấp</string>
+    <string name="nav_camera">Camera</string>
+    <string name="nav_settings">Cài đặt</string>
+
+    <string name="status_title">Trợ lý giọng nói</string>
+    <string name="battery_status">Pin: %1$d%%</string>
+    <string name="press_to_speak">NHẤN ĐỂ NÓI</string>
+    <string name="sos_button">SOS KHẨN CẤP</string>
+    <string name="command_hint">"Lệnh của bạn"</string>
+    <string name="response_hint">Đang chờ lệnh…</string>
+    <string name="calling_contact">Đang gọi cho %1$s</string>
+    <string name="contact_not_found">Không tìm thấy liên hệ %1$s</string>
+    <string name="time_response">Bây giờ là %1$s</string>
+    <string name="error_not_understand">Tôi không hiểu lệnh của bạn</string>
+
+    <string name="camera_title">Nhận diện vật thể</string>
+    <string name="detection_result">Kết quả: %1$s</string>
+    <string name="analyzing">Đang phân tích…</string>
+
+    <string name="contacts_title">Liên hệ khẩn cấp</string>
+    <string name="add_contact">Thêm liên hệ</string>
+    <string name="empty_contacts">Chưa có liên hệ khẩn cấp</string>
+    <string name="priority_label">Ưu tiên: %1$d</string>
+    <string name="delete_contact">Xóa liên hệ</string>
+
+    <string name="settings_title">Cài đặt</string>
+    <string name="tts_speed">TỐC ĐỘ ĐỌC</string>
+    <string name="volume">ÂM LƯỢNG</string>
+    <string name="language">NGÔN NGỮ</string>
+    <string name="vi_language">Tiếng Việt</string>
+    <string name="en_language">English</string>
+    <string name="object_detection_toggle">NHẬN DIỆN VẬT THỂ</string>
+    <string name="battery_warning_toggle">CẢNH BÁO PIN YẾU</string>
+    <string name="sos_delay">THỜI GIAN CHỜ SOS</string>
+    <string name="seconds_unit">%1$d giây</string>
+</resources>

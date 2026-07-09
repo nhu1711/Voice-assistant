@@ -1,0 +1,109 @@
+# ============================================
+# .gitignore for Android Voice Assistant Project
+# ============================================
+
+# Built application files
+*.apk
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+release/
+
+# Gradle files
+.gradle/
+build/
+gradle/
+!gradle/wrapper/gradle-wrapper.jar
+local.properties
+gradle-wrapper.properties
+
+# Android Studio
+.idea/
+*.iml
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries/
+.idea/libraries/
+.idea/caches/
+.idea/modules.xml
+.idea/shelf/
+.idea/.name
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/navEditor.xml
+*.ipr
+*.iws
+*.iml
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Keystore files (BẢO MẬT - KHÔNG BAO GIỜ UPLOAD)
+*.jks
+*.keystore
+*.p12
+*.p8
+
+# Google Services
+google-services.json
+
+# Local configuration
+local.properties
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# User-specific configurations
+.idea/caches/
+.idea/libraries/
+.idea/shelf/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+*.iml
+*.ipr
+*.iws
+
+# Android Studio Navigation Editor
+.navigation/
+
+# Code coverage
+*.ec
+
+# Test reports
+test-output/
+
+# Firebase
+firebase-debug.log
