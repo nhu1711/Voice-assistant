@@ -26,8 +26,8 @@ build/
 gradle/wrapper/
 !gradle/libs.versions.toml
 !gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
 local.properties
-gradle-wrapper.properties
 
 # Android Studio
 .idea/
