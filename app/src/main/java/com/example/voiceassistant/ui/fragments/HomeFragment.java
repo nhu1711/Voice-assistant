@@ -3,7 +3,6 @@ package com.example.voiceassistant.ui.fragments;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -23,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.voiceassistant.R;
+import com.example.voiceassistant.battery.BatteryManagerHelper;
 import com.example.voiceassistant.call.CallManager;
 import com.example.voiceassistant.constants.AppConstants;
 import com.example.voiceassistant.contacts.ContactManager;
@@ -30,6 +30,7 @@ import com.example.voiceassistant.permissions.PermissionHelper;
 import com.example.voiceassistant.speech.CommandParser;
 import com.example.voiceassistant.speech.SpeechRecognizerManager;
 import com.example.voiceassistant.tts.TTSManager;
+import com.example.voiceassistant.utils.TimeFormatter;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
@@ -52,6 +53,7 @@ public class HomeFragment extends Fragment {
     private SpeechRecognizerManager speechRecognizerManager;
     private ContactManager contactManager;
     private CallManager callManager;
+    private BatteryManagerHelper batteryManagerHelper;
 
     private ObjectAnimator pulseAnimator;
 
@@ -170,6 +172,7 @@ public class HomeFragment extends Fragment {
 
         contactManager = new ContactManager(context);
         callManager = new CallManager(context, ttsManager);
+        batteryManagerHelper = new BatteryManagerHelper(context);
     }
 
     private void setupListeners() {
@@ -264,25 +267,54 @@ public class HomeFragment extends Fragment {
     }
 
     private void handleTimeCommand() {
-        String time = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-        String response = getString(R.string.time_response, time);
-        tvResponse.setText(response);
-        ttsManager.speak(response);
+        try {
+            Context context = requireContext();
+            String language = getCurrentLanguage();
+            
+            // Định dạng hiển thị và câu đọc
+            String displayText = TimeFormatter.getDisplayTime(context);
+            String speechText = TimeFormatter.getTimeSpeech(context, language);
+            
+            // Hiển thị và đọc
+            tvResponse.setText(displayText);
+            ttsManager.speak(speechText, language);
+            
+            tvStatus.setText(getString(R.string.status_title));
+            Log.d(TAG, "handleTimeCommand: " + speechText);
+        } catch (Exception e) {
+            Log.e(TAG, "Error handling time command", e);
+            String errorMsg = getString(R.string.error_time);
+            tvResponse.setText(errorMsg);
+            ttsManager.speak(errorMsg);
+        }
+    }
+
+    /**
+     * Lấy ngôn ngữ hiện tại từ SharedPreferences hoặc hệ thống
+     */
+    private String getCurrentLanguage() {
+        android.content.SharedPreferences prefs = requireContext().getSharedPreferences(
+                AppConstants.PREF_NAME, Context.MODE_PRIVATE
+        );
+        // Mặc định lấy theo ngôn ngữ hệ thống nếu chưa lưu trong prefs
+        String systemLang = Locale.getDefault().getLanguage();
+        String defaultLang = systemLang.equals("vi") ? AppConstants.LANGUAGE_VIETNAMESE : AppConstants.LANGUAGE_ENGLISH;
+        
+        return prefs.getString(AppConstants.PREF_LANGUAGE, defaultLang);
     }
 
     private void handleBatteryCommand() {
-        int batteryLevel = getBatteryLevel();
-        String response = getString(R.string.battery_status, batteryLevel);
-        tvResponse.setText(response);
-        ttsManager.speak(response);
+        String response = batteryManagerHelper.getBatterySpeechResponse();
+        
+        tvResponse.setText(getString(R.string.battery_status, batteryManagerHelper.getBatteryLevel()));
+        ttsManager.speak(response, getCurrentLanguage());
+        
+        tvStatus.setText(getString(R.string.status_title));
+        updateSystemInfo();
     }
 
     private int getBatteryLevel() {
-        android.os.BatteryManager bm = (android.os.BatteryManager) requireContext().getSystemService(Context.BATTERY_SERVICE);
-        if (bm != null) {
-            return bm.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY);
-        }
-        return 0;
+        return batteryManagerHelper.getBatteryLevel();
     }
 
     private void updateSystemInfo() {

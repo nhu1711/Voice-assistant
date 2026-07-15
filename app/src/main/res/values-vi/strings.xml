@@ -7,10 +7,25 @@
 
     <string name="status_title">Trợ lý giọng nói</string>
     <string name="battery_status">Pin: %1$d%%</string>
+    <string name="battery_speech">Mức pin hiện tại là %1$d phần trăm</string>
+    <string name="battery_low_warning">. Pin yếu, vui lòng sạc thiết bị</string>
     <string name="press_to_speak">NHẤN ĐỂ NÓI</string>
     <string name="sos_button">SOS KHẨN CẤP</string>
     <string name="command_hint">"Lệnh của bạn"</string>
     <string name="response_hint">Đang chờ lệnh…</string>
+
+    <string name="status_ready">Sẵn sàng</string>
+    <string name="status_listening">Đang lắng nghe…</string>
+    <string name="status_processing">Đang xử lý…</string>
+
+    <string name="time_now">Bây giờ là %s</string>
+    <string name="time_spoken_vi_full">Bây giờ là %1$d giờ %2$d phút</string>
+    <string name="time_spoken_vi_no_min">Bây giờ là %1$d giờ</string>
+    <string name="time_display_format">HH:mm</string>
+
+    <string name="error_time">Không thể lấy thời gian</string>
+    <string name="error_general">Đã xảy ra lỗi</string>
+
     <string name="calling_contact">Đang gọi cho %1$s</string>
     <string name="contact_not_found">Không tìm thấy liên hệ %1$s</string>
     <string name="time_response">Bây giờ là %1$s</string>

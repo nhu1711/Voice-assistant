@@ -7,10 +7,27 @@
 
     <string name="status_title">Voice Assistant</string>
     <string name="battery_status">Battery: %1$d%%</string>
+    <string name="battery_speech">Your battery level is %1$d percent</string>
+    <string name="battery_low_warning">. Low battery, please charge your device</string>
     <string name="press_to_speak">PRESS TO SPEAK</string>
     <string name="sos_button">SOS EMERGENCY</string>
     <string name="command_hint">"Your command"</string>
     <string name="response_hint">Waiting for command…</string>
+
+    <string name="status_ready">Ready</string>
+    <string name="status_listening">Listening…</string>
+    <string name="status_processing">Processing…</string>
+
+    <string name="time_now">Now is %s</string>
+    <string name="time_spoken_en_full">It’s %1$d:%2$02d %3$s</string>
+    <string name="time_spoken_en_no_min">It’s %1$d %2$s</string>
+    <string name="time_spoken_vi_full">Bây giờ là %1$d giờ %2$d phút</string>
+    <string name="time_spoken_vi_no_min">Bây giờ là %1$d giờ</string>
+    <string name="time_display_format">hh:mm a</string>
+
+    <string name="error_time">Cannot get time</string>
+    <string name="error_general">An error occurred</string>
+
     <string name="calling_contact">Calling %1$s</string>
     <string name="contact_not_found">Contact %1$s not found</string>
     <string name="time_response">Current time is %1$s</string>

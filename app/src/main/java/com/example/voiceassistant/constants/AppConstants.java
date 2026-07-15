@@ -35,6 +35,15 @@ public class AppConstants {
     public static final String PREF_SPEECH_RATE = "speech_rate";
     public static final String PREF_LANGUAGE = "language";
     
+    // ===== LANGUAGE =====
+    public static final String LANGUAGE_VIETNAMESE = "vi";
+    public static final String LANGUAGE_ENGLISH = "en";
+    public static final String DEFAULT_LANGUAGE = LANGUAGE_VIETNAMESE;
+    
+    // ===== TIME FORMAT =====
+    public static final String TIME_FORMAT_VI = "HH:mm";
+    public static final String TIME_FORMAT_EN = "hh:mm a";
+    
     // SOS
     public static final int SOS_CONFIRM_TIMEOUT = 5; // seconds
     public static final int MAX_EMERGENCY_CONTACTS = 5;

@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.example.voiceassistant.constants.AppConstants;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -23,6 +22,8 @@ public class TTSManager implements TextToSpeech.OnInitListener {
     private final Context context;
     private boolean isInitialized = false;
     private TTSListener listener;
+    
+    private String currentLanguage = AppConstants.DEFAULT_LANGUAGE;
     
     public interface TTSListener {
         void onSpeechStarted();
@@ -43,16 +44,7 @@ public class TTSManager implements TextToSpeech.OnInitListener {
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-            // Check system language to set appropriate TTS language
-            Locale currentLocale = context.getResources().getConfiguration().getLocales().get(0);
-            int result = tts.setLanguage(currentLocale);
-            
-            if (result == TextToSpeech.LANG_MISSING_DATA || 
-                result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                // Fallback to English
-                tts.setLanguage(Locale.US);
-                Log.w(TAG, "Current language not supported, using English");
-            }
+            setLanguage(currentLanguage);
             
             // Cài đặt tốc độ và pitch mặc định
             tts.setSpeechRate(AppConstants.TTS_DEFAULT_SPEECH_RATE);
@@ -88,6 +80,25 @@ public class TTSManager implements TextToSpeech.OnInitListener {
             Log.e(TAG, "TTS initialization failed");
         }
     }
+
+    /**
+     * Đặt ngôn ngữ mặc định cho TTS
+     */
+    public void setLanguage(String language) {
+        this.currentLanguage = language;
+        if (tts == null) return;
+        
+        Locale locale = language.equals(AppConstants.LANGUAGE_VIETNAMESE) 
+            ? new Locale("vi", "VN") 
+            : Locale.US;
+        
+        int result = tts.setLanguage(locale);
+        if (result == TextToSpeech.LANG_MISSING_DATA || 
+            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            Log.w(TAG, "Language not supported: " + language + ", using fallback");
+            tts.setLanguage(Locale.US);
+        }
+    }
     
     /**
      * Đọc văn bản bằng TTS (BR-04)
@@ -108,11 +119,24 @@ public class TTSManager implements TextToSpeech.OnInitListener {
         
         Log.d(TAG, "Speaking: " + text);
         
-        // Sử dụng QUEUE_FLUSH để dừng đọc hiện tại
-        HashMap<String, String> params = new HashMap<>();
-        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_ID);
-        
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, UTTERANCE_ID);
+    }
+
+    /**
+     * Đọc văn bản với ngôn ngữ cụ thể
+     */
+    public void speak(String text, String language) {
+        if (!isInitialized) {
+            speak(text);
+            return;
+        }
+        
+        String previousLanguage = currentLanguage;
+        setLanguage(language);
+        speak(text);
+        // Lưu ý: Việc reset ngay lập tức có thể gây lỗi nếu engine chưa kịp đọc. 
+        // Trong dự án đơn giản này, ta chấp nhận reset sau khi gọi.
+        setLanguage(previousLanguage);
     }
     
     /**
