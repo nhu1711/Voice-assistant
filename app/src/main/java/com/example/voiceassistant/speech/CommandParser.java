@@ -45,6 +45,26 @@ public class CommandParser {
             return new CommandResult(AppConstants.COMMAND_SOS, text);
         }
         
+        // Kiểm tra lệnh START_DETECT
+        if (isStartDetectCommand(lowerText)) {
+            return new CommandResult(AppConstants.COMMAND_START_DETECT, text);
+        }
+        
+        // Kiểm tra lệnh STOP_DETECT
+        if (isStopDetectCommand(lowerText)) {
+            return new CommandResult(AppConstants.COMMAND_STOP_DETECT, text);
+        }
+        
+        // Kiểm tra lệnh CLOSE_CAMERA
+        if (isCloseCameraCommand(lowerText)) {
+            return new CommandResult(AppConstants.COMMAND_CLOSE_CAMERA, text);
+        }
+        
+        // Kiểm tra lệnh REPEAT
+        if (isRepeatCommand(lowerText)) {
+            return new CommandResult(AppConstants.COMMAND_REPEAT, text);
+        }
+        
         // Kiểm tra lệnh DETECT
         if (isDetectCommand(lowerText)) {
             return new CommandResult(AppConstants.COMMAND_DETECT, text);
@@ -189,6 +209,44 @@ public class CommandParser {
             }
         }
         return false;
+    }
+    
+    /**
+     * Kiểm tra lệnh bắt đầu nhận diện
+     */
+    private static boolean isStartDetectCommand(String text) {
+        return text.contains("bắt đầu nhận diện") || text.contains("bắt đầu") || 
+               text.contains("chạy nhận diện") || text.contains("bật nhận diện") ||
+               text.contains("start object detection") || text.contains("start detection");
+    }
+    
+    /**
+     * Kiểm tra lệnh dừng nhận diện
+     */
+    private static boolean isStopDetectCommand(String text) {
+        return text.contains("dừng nhận diện") || text.contains("dừng") || 
+               text.contains("tắt nhận diện") || text.contains("ngừng nhận diện") ||
+               text.contains("stop object detection") || text.contains("stop detection");
+    }
+    
+    /**
+     * Kiểm tra lệnh đóng camera
+     */
+    private static boolean isCloseCameraCommand(String text) {
+        return text.contains("đóng camera") || text.contains("tắt camera") || 
+               text.contains("thoát camera") || text.contains("quay lại") || 
+               text.contains("đóng") || text.contains("close camera") || 
+               text.contains("close") || text.contains("go back");
+    }
+    
+    /**
+     * Kiểm tra lệnh nhắc lại/đọc lại
+     */
+    private static boolean isRepeatCommand(String text) {
+        return text.contains("lặp lại") || text.contains("nói lại") || 
+               text.contains("đọc lại") || text.contains("nhắc lại") || 
+               text.contains("repeat") || text.contains("speak again") || 
+               text.contains("read again");
     }
     
     /**

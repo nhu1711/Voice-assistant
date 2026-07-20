@@ -4,11 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.voiceassistant"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.voiceassistant"
@@ -43,6 +39,19 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     annotationProcessor(libs.room.compiler)
+    
+    // CameraX
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.view)
+    
+    // MediaPipe Tasks Vision
+    implementation(libs.mediapipe.tasks.vision)
+    
+    // TensorFlow Lite
+    implementation(libs.tensorflow.lite)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

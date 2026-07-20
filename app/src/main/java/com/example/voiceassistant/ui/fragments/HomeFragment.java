@@ -31,6 +31,8 @@ import com.example.voiceassistant.speech.CommandParser;
 import com.example.voiceassistant.speech.SpeechRecognizerManager;
 import com.example.voiceassistant.tts.TTSManager;
 import com.example.voiceassistant.utils.TimeFormatter;
+import com.example.voiceassistant.ui.activities.MainActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
@@ -243,6 +245,9 @@ public class HomeFragment extends Fragment {
             case AppConstants.COMMAND_BATTERY:
                 handleBatteryCommand();
                 break;
+            case AppConstants.COMMAND_DETECT:
+                handleDetectCommand();
+                break;
             case AppConstants.COMMAND_READ_NOTIFICATIONS:
                 handleReadNotificationsCommand();
                 break;
@@ -252,6 +257,22 @@ public class HomeFragment extends Fragment {
                 ttsManager.speakNow(response); // Ưu tiên nói lỗi ngay lập tức
                 break;
         }
+    }
+
+    private void handleDetectCommand() {
+        Log.d(TAG, "Handling DETECT command");
+        String response = "Đang mở chế độ nhận diện vật thể.";
+        tvResponse.setText(response);
+        ttsManager.speak(response);
+        
+        handler.postDelayed(() -> {
+            if (isAdded() && getActivity() instanceof MainActivity) {
+                BottomNavigationView bottomNav = getActivity().findViewById(R.id.bottom_navigation);
+                if (bottomNav != null) {
+                    bottomNav.setSelectedItemId(R.id.nav_camera);
+                }
+            }
+        }, 1500);
     }
 
     private void handleCallCommand(String contactName) {

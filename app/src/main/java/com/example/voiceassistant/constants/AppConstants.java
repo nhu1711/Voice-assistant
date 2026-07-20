@@ -24,6 +24,10 @@ public class AppConstants {
     public static final String COMMAND_BATTERY = "BATTERY";
     public static final String COMMAND_SOS = "SOS";
     public static final String COMMAND_DETECT = "DETECT";
+    public static final String COMMAND_START_DETECT = "START_DETECT";
+    public static final String COMMAND_STOP_DETECT = "STOP_DETECT";
+    public static final String COMMAND_CLOSE_CAMERA = "CLOSE_CAMERA";
+    public static final String COMMAND_REPEAT = "REPEAT";
     public static final String COMMAND_UNKNOWN = "UNKNOWN";
     
     // Intent Actions

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <!-- Placeholder for Camera Preview -->
+    <!-- Camera Preview and Overlay -->
     <FrameLayout
         android:id="@+id/view_finder_placeholder"
         android:layout_width="match_parent"
@@ -13,12 +13,16 @@
         app:layout_constraintBottom_toTopOf="@id/ll_camera_controls"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Camera Preview Placeholder"
-            android:textColor="#FFFFFF" />
+        <androidx.camera.view.PreviewView
+            android:id="@+id/view_finder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scaleType="fillCenter" />
+
+        <com.example.voiceassistant.ui.fragments.DetectionOverlay
+            android:id="@+id/detection_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </FrameLayout>
 
     <LinearLayout

@@ -75,6 +75,27 @@ public class PermissionHelper {
     }
     
     /**
+     * Kiểm tra quyền CAMERA
+     */
+    public static boolean hasCameraPermission(Context context) {
+        return ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED;
+    }
+    
+    /**
+     * Yêu cầu quyền CAMERA
+     */
+    public static void requestCameraPermission(Activity activity) {
+        ActivityCompat.requestPermissions(
+            activity,
+            new String[]{android.Manifest.permission.CAMERA},
+            AppConstants.REQUEST_CAMERA
+        );
+    }
+
+    /**
      * Kiểm tra tất cả quyền cần thiết cho UC-01
      */
     public static boolean hasAllPermissionsForVoiceCommand(Context context) {
@@ -90,7 +111,8 @@ public class PermissionHelper {
             new String[]{
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CALL_PHONE,
-                Manifest.permission.READ_CONTACTS
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.CAMERA
             },
             AppConstants.REQUEST_RECORD_AUDIO // Có thể dùng một code chung
         );
