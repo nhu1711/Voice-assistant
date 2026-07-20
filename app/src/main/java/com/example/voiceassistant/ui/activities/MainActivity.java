@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.voiceassistant.R;
-import com.example.voiceassistant.ui.fragments.CameraFragment;
+import com.example.voiceassistant.ui.fragments.ObjectDetectionFragment;
 import com.example.voiceassistant.ui.fragments.ContactsFragment;
 import com.example.voiceassistant.ui.fragments.HomeFragment;
 import com.example.voiceassistant.ui.fragments.SettingsFragment;
@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new HomeFragment();
             } else if (itemId == R.id.nav_contacts) {
                 selectedFragment = new ContactsFragment();
-            } else if (itemId == R.id.nav_camera) {
-                selectedFragment = new CameraFragment();
+            } else if (itemId == R.id.nav_object_detection) {
+                selectedFragment = new ObjectDetectionFragment();
             } else if (itemId == R.id.nav_settings) {
                 selectedFragment = new SettingsFragment();
             }

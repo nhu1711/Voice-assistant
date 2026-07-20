@@ -29,6 +29,8 @@ import com.example.voiceassistant.contacts.ContactManager;
 import com.example.voiceassistant.permissions.PermissionHelper;
 import com.example.voiceassistant.speech.CommandParser;
 import com.example.voiceassistant.speech.SpeechRecognizerManager;
+import com.example.voiceassistant.speech.VoiceCommandDispatcher;
+import com.example.voiceassistant.speech.VoiceIntent;
 import com.example.voiceassistant.tts.TTSManager;
 import com.example.voiceassistant.utils.TimeFormatter;
 import com.example.voiceassistant.ui.activities.MainActivity;
@@ -90,6 +92,7 @@ public class HomeFragment extends Fragment {
         tvBattery = view.findViewById(R.id.tv_battery);
     }
 
+    private VoiceCommandDispatcher voiceCommandDispatcher;
     private void initManagers() {
         Context context = requireContext();
         
@@ -143,7 +146,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onResult(String recognizedText) {
-                Log.d(TAG, "Speech Result Received: " + recognizedText);
+                Log.d(TAG, "[VOICE] VOICE_RESULT: " + recognizedText);
                 updateUI(() -> {
                     stopPulseAnimation();
                     tvCommand.setText(recognizedText);
@@ -158,8 +161,6 @@ public class HomeFragment extends Fragment {
                 updateUI(() -> {
                     stopPulseAnimation();
                     String currentText = tvCommand.getText().toString();
-                    // Nếu máy báo lỗi nhưng chúng ta đã có kết quả tạm thời khá dài (ví dụ > 5 ký tự)
-                    // thì thử xử lý luôn lệnh đó thay vì báo lỗi.
                     if (currentText.length() > 5) {
                         tvStatus.setText(getString(R.string.status_title));
                         processVoiceCommand(currentText);
@@ -178,10 +179,18 @@ public class HomeFragment extends Fragment {
         contactManager = new ContactManager(context);
         callManager = new CallManager(context, ttsManager);
         batteryManagerHelper = new BatteryManagerHelper(context);
+
+        voiceCommandDispatcher = new VoiceCommandDispatcher(requireActivity(), ttsManager, contactManager, callManager, batteryManagerHelper, new VoiceCommandDispatcher.CommandCallback() {
+            @Override
+            public void onResponse(String text) {
+                updateUI(() -> tvResponse.setText(text));
+            }
+        });
     }
 
     private void setupListeners() {
         btnMicro.setOnClickListener(v -> {
+            Log.d(TAG, "[VOICE] VOICE_START");
             if (!PermissionHelper.hasRecordAudioPermission(requireContext())) {
                 PermissionHelper.requestRecordAudioPermission(requireActivity());
                 return;
@@ -209,6 +218,7 @@ public class HomeFragment extends Fragment {
         tvCommand.setText("");
         tvResponse.setText("");
         
+        ttsManager.stop();
         speechRecognizerManager.startListening();
     }
 
@@ -234,29 +244,7 @@ public class HomeFragment extends Fragment {
 
     private void processVoiceCommand(String text) {
         CommandParser.CommandResult result = CommandParser.parse(text);
-        
-        switch (result.getCommandType()) {
-            case AppConstants.COMMAND_CALL:
-                handleCallCommand(result.getCommandText());
-                break;
-            case AppConstants.COMMAND_TIME:
-                handleTimeCommand();
-                break;
-            case AppConstants.COMMAND_BATTERY:
-                handleBatteryCommand();
-                break;
-            case AppConstants.COMMAND_DETECT:
-                handleDetectCommand();
-                break;
-            case AppConstants.COMMAND_READ_NOTIFICATIONS:
-                handleReadNotificationsCommand();
-                break;
-            default:
-                String response = getString(R.string.error_not_understand);
-                tvResponse.setText(response);
-                ttsManager.speakNow(response); // Ưu tiên nói lỗi ngay lập tức
-                break;
-        }
+        voiceCommandDispatcher.execute(result);
     }
 
     private void handleDetectCommand() {
@@ -269,99 +257,10 @@ public class HomeFragment extends Fragment {
             if (isAdded() && getActivity() instanceof MainActivity) {
                 BottomNavigationView bottomNav = getActivity().findViewById(R.id.bottom_navigation);
                 if (bottomNav != null) {
-                    bottomNav.setSelectedItemId(R.id.nav_camera);
+                    bottomNav.setSelectedItemId(R.id.nav_object_detection);
                 }
             }
         }, 1500);
-    }
-
-    private void handleCallCommand(String contactName) {
-        Log.d(TAG, "Handling CALL command for: " + contactName);
-        ContactManager.ContactInfo contact = contactManager.findContactByName(contactName);
-        
-        if (contact != null) {
-            Log.d(TAG, "Contact found: " + contact.getName() + " - " + contact.getPhoneNumber());
-            String response = getString(R.string.calling_contact, contact.getName());
-            tvResponse.setText(response);
-            ttsManager.speakNow(response);
-            callManager.makeCall(contact.getPhoneNumber(), contact.getName());
-        } else {
-            Log.w(TAG, "Contact NOT found in system: " + contactName);
-            String response = getString(R.string.contact_not_found, contactName);
-            tvResponse.setText(response);
-            ttsManager.speakNow(response);
-        }
-    }
-
-    private void handleTimeCommand() {
-        try {
-            Context context = requireContext();
-            String language = getCurrentLanguage();
-            
-            // Định dạng hiển thị và câu đọc
-            String displayText = TimeFormatter.getDisplayTime(context);
-            String speechText = TimeFormatter.getTimeSpeech(context, language);
-            
-            // Hiển thị và đọc
-            tvResponse.setText(displayText);
-            ttsManager.speakNow(speechText);
-            
-            tvStatus.setText(getString(R.string.status_title));
-            Log.d(TAG, "handleTimeCommand: " + speechText);
-        } catch (Exception e) {
-            Log.e(TAG, "Error handling time command", e);
-            String errorMsg = getString(R.string.error_time);
-            tvResponse.setText(errorMsg);
-            ttsManager.speak(errorMsg);
-        }
-    }
-
-    /**
-     * Lấy ngôn ngữ hiện tại từ SharedPreferences hoặc hệ thống
-     */
-    private String getCurrentLanguage() {
-        android.content.SharedPreferences prefs = requireContext().getSharedPreferences(
-                AppConstants.PREF_NAME, Context.MODE_PRIVATE
-        );
-        // Mặc định lấy theo ngôn ngữ hệ thống nếu chưa lưu trong prefs
-        String systemLang = Locale.getDefault().getLanguage();
-        String defaultLang = systemLang.equals("vi") ? AppConstants.LANGUAGE_VIETNAMESE : AppConstants.LANGUAGE_ENGLISH;
-        
-        return prefs.getString(AppConstants.PREF_LANGUAGE, defaultLang);
-    }
-
-    private void handleBatteryCommand() {
-        String response = batteryManagerHelper.getBatterySpeechResponse();
-        
-        tvResponse.setText(getString(R.string.battery_status, batteryManagerHelper.getBatteryLevel()));
-        ttsManager.speakNow(response);
-        
-        tvStatus.setText(getString(R.string.status_title));
-        updateSystemInfo();
-    }
-
-    private void handleReadNotificationsCommand() {
-        java.util.List<com.example.voiceassistant.repository.NotificationRepository.NotificationItem> unread =
-                com.example.voiceassistant.repository.NotificationRepository.getInstance().getUnreadNotifications();
-        
-        if (unread.isEmpty()) {
-            String response = getString(R.string.no_unread_notifications);
-            tvResponse.setText(response);
-            ttsManager.speakNow(response);
-        } else {
-            StringBuilder sb = new StringBuilder();
-            sb.append(getString(R.string.reading_notifications, unread.size())).append(". ");
-            for (com.example.voiceassistant.repository.NotificationRepository.NotificationItem item : unread) {
-                sb.append(getString(R.string.notif_read_full, item.getAppName(), item.getSender(), item.getContent())).append(". ");
-            }
-            tvResponse.setText(getString(R.string.reading_notifications_ui, unread.size()));
-            ttsManager.speakNow(sb.toString());
-            
-            // Clear after reading
-            com.example.voiceassistant.repository.NotificationRepository.getInstance().clearNotifications();
-        }
-        
-        tvStatus.setText(getString(R.string.status_title));
     }
 
     private int getBatteryLevel() {

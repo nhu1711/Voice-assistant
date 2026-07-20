@@ -2,7 +2,7 @@
     <string name="app_name">Trợ lý giọng nói</string>
     <string name="nav_home">Trang chủ</string>
     <string name="nav_contacts">Khẩn cấp</string>
-    <string name="nav_camera">Camera</string>
+    <string name="nav_object_detection">Nhận diện vật thể</string>
     <string name="nav_settings">Cài đặt</string>
 
     <string name="status_title">Trợ lý giọng nói</string>

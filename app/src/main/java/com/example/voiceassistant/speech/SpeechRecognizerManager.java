@@ -88,18 +88,26 @@ public class SpeechRecognizerManager {
             
             @Override
             public void onEndOfSpeech() {
-                isListening = false;
-                Log.d(TAG, "End of speech");
-                if (callback != null) {
-                    callback.onEndOfSpeech();
+                if (isListening) {
+                    isListening = false;
+                    Log.d(TAG, "[Speech] recognition finished");
+                    if (callback != null) {
+                        callback.onEndOfSpeech();
+                    }
                 }
             }
             
             @Override
             public void onError(int error) {
-                isListening = false;
                 String errorMessage = getErrorMessage(error);
                 Log.e(TAG, "Speech recognition error: " + errorMessage);
+                if (isListening) {
+                    isListening = false;
+                    Log.d(TAG, "[Speech] recognition finished (error)");
+                    if (callback != null) {
+                        callback.onEndOfSpeech();
+                    }
+                }
                 if (callback != null) {
                     callback.onError(errorMessage);
                 }
@@ -107,7 +115,14 @@ public class SpeechRecognizerManager {
             
             @Override
             public void onResults(Bundle results) {
-                isListening = false;
+                if (isListening) {
+                    isListening = false;
+                    Log.d(TAG, "[Speech] recognition finished (results)");
+                    if (callback != null) {
+                        callback.onEndOfSpeech();
+                    }
+                }
+                
                 ArrayList<String> matches = results.getStringArrayList(
                     SpeechRecognizer.RESULTS_RECOGNITION
                 );
@@ -184,6 +199,9 @@ public class SpeechRecognizerManager {
             speechRecognizer.stopListening();
             isListening = false;
             Log.d(TAG, "Stopped listening");
+            if (callback != null) {
+                callback.onEndOfSpeech();
+            }
         }
     }
     
@@ -193,8 +211,13 @@ public class SpeechRecognizerManager {
     public void cancel() {
         if (speechRecognizer != null) {
             speechRecognizer.cancel();
-            isListening = false;
-            Log.d(TAG, "Cancelled recognition");
+            if (isListening) {
+                isListening = false;
+                Log.d(TAG, "Cancelled recognition");
+                if (callback != null) {
+                    callback.onEndOfSpeech();
+                }
+            }
         }
     }
     
