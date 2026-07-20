@@ -101,7 +101,8 @@ public class HomeFragment extends Fragment {
         pulseAnimator.setRepeatCount(ValueAnimator.INFINITE);
         pulseAnimator.setRepeatMode(ValueAnimator.REVERSE);
 
-        ttsManager = new TTSManager(context, new TTSManager.TTSListener() {
+        ttsManager = TTSManager.getInstance(context);
+        ttsManager.setListener(new TTSManager.TTSListener() {
             @Override
             public void onSpeechStarted() {}
 
@@ -126,6 +127,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onBeginningOfSpeech() {
                 updateUI(() -> tvStatus.setText(getString(R.string.analyzing)));
+                ttsManager.setAssistantListening(true);
             }
 
             @Override
@@ -134,6 +136,7 @@ public class HomeFragment extends Fragment {
                     tvStatus.setText(getString(R.string.status_title));
                     stopPulseAnimation();
                 });
+                ttsManager.setAssistantListening(false);
             }
 
             @Override
@@ -240,10 +243,13 @@ public class HomeFragment extends Fragment {
             case AppConstants.COMMAND_BATTERY:
                 handleBatteryCommand();
                 break;
+            case AppConstants.COMMAND_READ_NOTIFICATIONS:
+                handleReadNotificationsCommand();
+                break;
             default:
                 String response = getString(R.string.error_not_understand);
                 tvResponse.setText(response);
-                ttsManager.speak(response);
+                ttsManager.speakNow(response); // Ưu tiên nói lỗi ngay lập tức
                 break;
         }
     }
@@ -256,13 +262,13 @@ public class HomeFragment extends Fragment {
             Log.d(TAG, "Contact found: " + contact.getName() + " - " + contact.getPhoneNumber());
             String response = getString(R.string.calling_contact, contact.getName());
             tvResponse.setText(response);
-            ttsManager.speak(response);
+            ttsManager.speakNow(response);
             callManager.makeCall(contact.getPhoneNumber(), contact.getName());
         } else {
             Log.w(TAG, "Contact NOT found in system: " + contactName);
             String response = getString(R.string.contact_not_found, contactName);
             tvResponse.setText(response);
-            ttsManager.speak(response);
+            ttsManager.speakNow(response);
         }
     }
 
@@ -277,7 +283,7 @@ public class HomeFragment extends Fragment {
             
             // Hiển thị và đọc
             tvResponse.setText(displayText);
-            ttsManager.speak(speechText, language);
+            ttsManager.speakNow(speechText);
             
             tvStatus.setText(getString(R.string.status_title));
             Log.d(TAG, "handleTimeCommand: " + speechText);
@@ -307,10 +313,34 @@ public class HomeFragment extends Fragment {
         String response = batteryManagerHelper.getBatterySpeechResponse();
         
         tvResponse.setText(getString(R.string.battery_status, batteryManagerHelper.getBatteryLevel()));
-        ttsManager.speak(response, getCurrentLanguage());
+        ttsManager.speakNow(response);
         
         tvStatus.setText(getString(R.string.status_title));
         updateSystemInfo();
+    }
+
+    private void handleReadNotificationsCommand() {
+        java.util.List<com.example.voiceassistant.repository.NotificationRepository.NotificationItem> unread =
+                com.example.voiceassistant.repository.NotificationRepository.getInstance().getUnreadNotifications();
+        
+        if (unread.isEmpty()) {
+            String response = getString(R.string.no_unread_notifications);
+            tvResponse.setText(response);
+            ttsManager.speakNow(response);
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append(getString(R.string.reading_notifications, unread.size())).append(". ");
+            for (com.example.voiceassistant.repository.NotificationRepository.NotificationItem item : unread) {
+                sb.append(getString(R.string.notif_read_full, item.getAppName(), item.getSender(), item.getContent())).append(". ");
+            }
+            tvResponse.setText(getString(R.string.reading_notifications_ui, unread.size()));
+            ttsManager.speakNow(sb.toString());
+            
+            // Clear after reading
+            com.example.voiceassistant.repository.NotificationRepository.getInstance().clearNotifications();
+        }
+        
+        tvStatus.setText(getString(R.string.status_title));
     }
 
     private int getBatteryLevel() {
@@ -334,7 +364,6 @@ public class HomeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if (speechRecognizerManager != null) speechRecognizerManager.destroy();
-        if (ttsManager != null) ttsManager.shutdown();
         handler.removeCallbacks(timeUpdater);
     }
 }

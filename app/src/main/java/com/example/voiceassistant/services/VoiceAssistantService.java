@@ -22,6 +22,7 @@ import com.example.voiceassistant.constants.AppConstants;
 import com.example.voiceassistant.receivers.SystemBroadcastReceiver;
 import com.example.voiceassistant.ui.activities.MainActivity;
 import com.example.voiceassistant.utils.LocaleHelper;
+import com.example.voiceassistant.tts.TTSManager;
 
 /**
  * Foreground Service để trợ lý chạy nền (FR-09.1)
@@ -29,7 +30,7 @@ import com.example.voiceassistant.utils.LocaleHelper;
 public class VoiceAssistantService extends Service {
     private static final String TAG = "VoiceAssistantService";
     private SystemBroadcastReceiver systemReceiver;
-    private com.example.voiceassistant.tts.TTSManager ttsManager;
+    private TTSManager ttsManager;
 
     @Override
     protected void attachBaseContext(android.content.Context newBase) {
@@ -39,8 +40,10 @@ public class VoiceAssistantService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "Service Created");
-        ttsManager = new com.example.voiceassistant.tts.TTSManager(this);
+        
+        // Initialize managers
+        ttsManager = TTSManager.getInstance(this);
+        
         createNotificationChannel();
         registerSystemReceivers();
     }
@@ -114,17 +117,13 @@ public class VoiceAssistantService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "Service Destroyed");
+        Log.d(TAG, "Service is being destroyed");
+        
         if (systemReceiver != null) {
-            try {
-                unregisterReceiver(systemReceiver);
-            } catch (Exception e) {
-                Log.e(TAG, "Unregister receiver error", e);
-            }
+            unregisterReceiver(systemReceiver);
+            systemReceiver = null;
         }
-        if (ttsManager != null) {
-            ttsManager.shutdown();
-        }
+        
         super.onDestroy();
     }
 

@@ -59,4 +59,12 @@ public class AppConstants {
     // SOS
     public static final int SOS_CONFIRM_TIMEOUT = 5; // seconds
     public static final int MAX_EMERGENCY_CONTACTS = 5;
+    
+    // ===== NOTIFICATION READER =====
+    public static final String COMMAND_READ_NOTIFICATIONS = "READ_NOTIFICATIONS";
+    public static final String PREF_READ_NOTIFICATIONS = "read_notifications";
+    public static final String PREF_READ_MODE = "read_mode";
+    public static final String PREF_SELECTED_APPS = "selected_apps";
+    public static final int READ_MODE_AUTO = 1;
+    public static final int READ_MODE_ANNOUNCE_ONLY = 2;
 }

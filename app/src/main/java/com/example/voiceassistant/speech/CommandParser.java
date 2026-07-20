@@ -50,6 +50,11 @@ public class CommandParser {
             return new CommandResult(AppConstants.COMMAND_DETECT, text);
         }
         
+        // Kiểm tra lệnh READ_NOTIFICATIONS
+        if (isReadNotificationsCommand(lowerText)) {
+            return new CommandResult(AppConstants.COMMAND_READ_NOTIFICATIONS, text);
+        }
+        
         // Không xác định
         return new CommandResult(AppConstants.COMMAND_UNKNOWN, text);
     }
@@ -166,6 +171,24 @@ public class CommandParser {
     private static boolean isDetectCommand(String text) {
         return text.contains("nhận diện") || text.contains("detect") || 
                text.contains("vật thể") || text.contains("object");
+    }
+    
+    /**
+     * Kiểm tra lệnh đọc thông báo
+     */
+    private static boolean isReadNotificationsCommand(String text) {
+        String[] keywords = {
+            "đọc tin nhắn", "đọc thông báo", "có tin nhắn gì không", "tin nhắn mới",
+            "doc tin nhan", "doc thong bao",
+            "read message", "read messages", "read notification", "read notifications",
+            "any messages"
+        };
+        for (String keyword : keywords) {
+            if (text.contains(keyword)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**

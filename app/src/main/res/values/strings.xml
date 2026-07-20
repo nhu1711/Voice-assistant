@@ -63,4 +63,18 @@
     <string name="seconds_unit">%1$d seconds</string>
     <string name="test_speech_rate">This is the new speech rate</string>
     <string name="test_volume">This is the new volume</string>
+    
+    <string name="no_unread_notifications">You have no unread notifications.</string>
+    <string name="reading_notifications">You have %1$d unread notifications</string>
+    <string name="reading_notifications_ui">Reading %1$d notifications</string>
+    <string name="notif_read_full">Message from %1$s, %2$s. Content: %3$s</string>
+    <string name="notif_announce_only">You have a new message from %1$s, %2$s</string>
+
+    <string name="read_notifications_title">Voice Notifications</string>
+    <string name="read_notifications_desc">Allow reading app notifications</string>
+    <string name="read_mode_title">Mode</string>
+    <string name="read_mode_auto">Read full content automatically</string>
+    <string name="read_mode_announce">Only announce new message</string>
+    <string name="selected_apps_title">Apps to Read</string>
+    <string name="select_apps_button">Select Apps</string>
 </resources>

@@ -43,10 +43,7 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
         String lang = prefs.getString(AppConstants.PREF_LANGUAGE, AppConstants.DEFAULT_LANGUAGE);
         Context localizedContext = com.example.voiceassistant.utils.LocaleHelper.setLocale(context, lang);
 
-        if (ttsManager == null) {
-            // Fallback in case not set
-            ttsManager = new TTSManager(localizedContext);
-        }
+        ttsManager = TTSManager.getInstance(localizedContext);
 
         switch (action) {
             case Intent.ACTION_BATTERY_CHANGED:
@@ -62,10 +59,15 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
         if (prefs.getBoolean(AppConstants.PREF_BATTERY_ALERT, true)) {
             int level = intent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1);
+            int status = intent.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1);
+            
+            boolean isCharging = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING ||
+                                 status == android.os.BatteryManager.BATTERY_STATUS_FULL;
+            
             int batteryPct = (int) ((level / (float) scale) * 100);
             
-            // BR-09.2: Chỉ cảnh báo khi xuống dưới 20% và chỉ đọc một lần duy nhất tại mỗi mức
-            if (batteryPct <= 20 && batteryPct != lastBatteryAlertLevel) {
+            // BR-09.2: Chỉ cảnh báo khi xuống dưới 20%, chia hết cho 5 và không đang sạc
+            if (batteryPct <= 20 && batteryPct % 5 == 0 && batteryPct != lastBatteryAlertLevel && !isCharging) {
                 BatteryManagerHelper batteryHelper = new BatteryManagerHelper(context);
                 ttsManager.speak(batteryHelper.getBatterySpeechResponse());
                 lastBatteryAlertLevel = batteryPct;

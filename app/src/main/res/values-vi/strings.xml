@@ -61,4 +61,18 @@
     <string name="seconds_unit">%1$d giây</string>
     <string name="test_speech_rate">Đây là tốc độ đọc thử nghiệm</string>
     <string name="test_volume">Đây là âm lượng thử nghiệm</string>
+    
+    <string name="no_unread_notifications">Bạn không có thông báo nào chưa đọc.</string>
+    <string name="reading_notifications">Bạn có %1$d thông báo chưa đọc</string>
+    <string name="reading_notifications_ui">Đang đọc %1$d thông báo</string>
+    <string name="notif_read_full">Tin nhắn từ %1$s, %2$s. Nội dung: %3$s</string>
+    <string name="notif_announce_only">Bạn có tin nhắn mới từ %1$s, %2$s</string>
+
+    <string name="read_notifications_title">Thông báo bằng giọng nói</string>
+    <string name="read_notifications_desc">Cho phép đọc thông báo từ ứng dụng</string>
+    <string name="read_mode_title">Chế độ</string>
+    <string name="read_mode_auto">Đọc ngay nội dung</string>
+    <string name="read_mode_announce">Chỉ báo có thông báo mới</string>
+    <string name="selected_apps_title">Ứng dụng được đọc</string>
+    <string name="select_apps_button">Chọn ứng dụng</string>
 </resources>

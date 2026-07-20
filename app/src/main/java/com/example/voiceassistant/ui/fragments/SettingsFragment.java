@@ -16,36 +16,42 @@ import androidx.fragment.app.Fragment;
 import com.example.voiceassistant.R;
 import com.example.voiceassistant.constants.AppConstants;
 import com.example.voiceassistant.services.VoiceAssistantService;
+import com.example.voiceassistant.tts.TTSManager;
 import com.example.voiceassistant.utils.ServiceUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Locale;
+import android.provider.Settings;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.content.ComponentName;
 
 public class SettingsFragment extends Fragment {
 
     private SwitchMaterial switchBackgroundMode;
     private SwitchMaterial switchBatteryAlert;
     private SwitchMaterial switchNetworkAlert;
+    private SwitchMaterial switchReadNotifications;
+    private LinearLayout layoutReadSettings;
+    private RadioGroup rgReadMode;
+    private MaterialButton btnSelectApps;
     private Slider sliderSpeed;
     private Slider sliderVolume;
     private MaterialButton btnLanguage;
     private SharedPreferences prefs;
-    private com.example.voiceassistant.tts.TTSManager ttsManager;
+    private TTSManager ttsManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ttsManager = new com.example.voiceassistant.tts.TTSManager(requireContext());
+        ttsManager = TTSManager.getInstance(requireContext());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (ttsManager != null) {
-            ttsManager.shutdown();
-        }
     }
 
     @Nullable
@@ -62,6 +68,10 @@ public class SettingsFragment extends Fragment {
         switchBackgroundMode = view.findViewById(R.id.switch_background_mode);
         switchBatteryAlert = view.findViewById(R.id.switch_battery_warning);
         switchNetworkAlert = view.findViewById(R.id.switch_network_warning);
+        switchReadNotifications = view.findViewById(R.id.switch_read_notifications);
+        layoutReadSettings = view.findViewById(R.id.layout_read_settings);
+        rgReadMode = view.findViewById(R.id.rg_read_mode);
+        btnSelectApps = view.findViewById(R.id.btn_select_apps);
         sliderSpeed = view.findViewById(R.id.slider_tts_speed);
         sliderVolume = view.findViewById(R.id.slider_volume);
         btnLanguage = view.findViewById(R.id.btn_language);
@@ -82,6 +92,17 @@ public class SettingsFragment extends Fragment {
         switchBatteryAlert.setChecked(prefs.getBoolean(AppConstants.PREF_BATTERY_ALERT, true));
         switchNetworkAlert.setChecked(prefs.getBoolean(AppConstants.PREF_NETWORK_ALERT, true));
         
+        boolean readNotifsEnabled = prefs.getBoolean(AppConstants.PREF_READ_NOTIFICATIONS, false);
+        switchReadNotifications.setChecked(readNotifsEnabled);
+        layoutReadSettings.setVisibility(readNotifsEnabled ? View.VISIBLE : View.GONE);
+        
+        int readMode = prefs.getInt(AppConstants.PREF_READ_MODE, AppConstants.READ_MODE_ANNOUNCE_ONLY);
+        if (readMode == AppConstants.READ_MODE_AUTO) {
+            rgReadMode.check(R.id.rb_read_auto);
+        } else {
+            rgReadMode.check(R.id.rb_read_announce);
+        }
+        
         sliderSpeed.setValue(prefs.getFloat(AppConstants.PREF_SPEECH_RATE, 1.0f));
         sliderVolume.setValue((float) prefs.getInt("volume_level", 80));
 
@@ -99,6 +120,30 @@ public class SettingsFragment extends Fragment {
 
         switchNetworkAlert.setOnCheckedChangeListener((buttonView, isChecked) -> 
             prefs.edit().putBoolean(AppConstants.PREF_NETWORK_ALERT, isChecked).apply());
+
+        switchReadNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (!isNotificationServiceEnabled()) {
+                    // Prompt for permission
+                    switchReadNotifications.setChecked(false);
+                    startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                    Toast.makeText(requireContext(), "Please enable Notification Access for " + getString(R.string.app_name), Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+            prefs.edit().putBoolean(AppConstants.PREF_READ_NOTIFICATIONS, isChecked).apply();
+            layoutReadSettings.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
+        
+        rgReadMode.setOnCheckedChangeListener((group, checkedId) -> {
+            int mode = (checkedId == R.id.rb_read_auto) ? AppConstants.READ_MODE_AUTO : AppConstants.READ_MODE_ANNOUNCE_ONLY;
+            prefs.edit().putInt(AppConstants.PREF_READ_MODE, mode).apply();
+        });
+        
+        btnSelectApps.setOnClickListener(v -> {
+            AppSelectionDialogFragment dialog = new AppSelectionDialogFragment();
+            dialog.show(getChildFragmentManager(), "AppSelectionDialog");
+        });
 
         sliderSpeed.addOnChangeListener((slider, value, fromUser) -> {
             if (fromUser) {
@@ -121,6 +166,22 @@ public class SettingsFragment extends Fragment {
         });
 
         btnLanguage.setOnClickListener(v -> toggleLanguage());
+    }
+
+    private boolean isNotificationServiceEnabled() {
+        String pkgName = requireContext().getPackageName();
+        final String flat = Settings.Secure.getString(requireContext().getContentResolver(),
+                "enabled_notification_listeners");
+        if (flat != null && !flat.isEmpty()) {
+            final String[] names = flat.split(":");
+            for (String name : names) {
+                final ComponentName cn = ComponentName.unflattenFromString(name);
+                if (cn != null && cn.getPackageName().equals(pkgName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void updateService(boolean start) {
