@@ -44,6 +44,18 @@ public class AppConstants {
     public static final String TIME_FORMAT_VI = "HH:mm";
     public static final String TIME_FORMAT_EN = "hh:mm a";
     
+    // ===== NOTIFICATION =====
+    public static final String CHANNEL_ID = "voice_assistant_channel";
+    public static final int NOTIFICATION_ID = 888;
+    
+    // ===== PREFERENCE KEYS =====
+    public static final String PREF_BACKGROUND_MODE = "background_mode";
+    public static final String PREF_BATTERY_ALERT = "battery_alert";
+    public static final String PREF_NETWORK_ALERT = "network_alert";
+    
+    // ===== INTENT ACTIONS =====
+    public static final String ACTION_STOP_SERVICE = "com.example.voiceassistant.STOP_SERVICE";
+    
     // SOS
     public static final int SOS_CONFIRM_TIMEOUT = 5; // seconds
     public static final int MAX_EMERGENCY_CONTACTS = 5;

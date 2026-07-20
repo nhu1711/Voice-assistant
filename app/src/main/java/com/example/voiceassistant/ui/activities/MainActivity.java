@@ -11,9 +11,15 @@ import com.example.voiceassistant.ui.fragments.ContactsFragment;
 import com.example.voiceassistant.ui.fragments.HomeFragment;
 import com.example.voiceassistant.ui.fragments.SettingsFragment;
 import com.example.voiceassistant.permissions.PermissionHelper;
+import com.example.voiceassistant.utils.LocaleHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

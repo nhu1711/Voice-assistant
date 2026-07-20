@@ -1,6 +1,7 @@
 package com.example.voiceassistant.tts;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
@@ -46,12 +47,20 @@ public class TTSManager implements TextToSpeech.OnInitListener {
         if (status == TextToSpeech.SUCCESS) {
             setLanguage(currentLanguage);
             
-            // Cài đặt tốc độ và pitch mặc định
-            tts.setSpeechRate(AppConstants.TTS_DEFAULT_SPEECH_RATE);
+            // Đọc cấu hình từ SharedPreferences
+            android.content.SharedPreferences prefs = context.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
+            float speed = prefs.getFloat(AppConstants.PREF_SPEECH_RATE, AppConstants.TTS_DEFAULT_SPEECH_RATE);
+            int volume = prefs.getInt("volume_level", 80);
+            
+            // Cài đặt tốc độ
+            tts.setSpeechRate(speed);
             tts.setPitch(AppConstants.TTS_DEFAULT_PITCH);
             
+            // Volume is handled via Audio Manager for system TTS, 
+            // but we can pass it as a parameter in speak() if using KEY_PARAM_VOLUME
+            
             isInitialized = true;
-            Log.d(TAG, "TTS initialized successfully");
+            Log.d(TAG, "TTS initialized with speed: " + speed);
             
             // Đăng ký listener cho sự kiện
             tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
@@ -107,7 +116,6 @@ public class TTSManager implements TextToSpeech.OnInitListener {
     public void speak(String text) {
         if (!isInitialized) {
             Log.e(TAG, "TTS not initialized, waiting...");
-            // Re-init if needed? or just wait. Plan says re-init.
             tts = new TextToSpeech(context, this);
             return;
         }
@@ -116,10 +124,24 @@ public class TTSManager implements TextToSpeech.OnInitListener {
             Log.w(TAG, "Empty text to speak");
             return;
         }
+
+        android.content.SharedPreferences prefs = context.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
+        float speed = prefs.getFloat(AppConstants.PREF_SPEECH_RATE, AppConstants.TTS_DEFAULT_SPEECH_RATE);
+        float volume = prefs.getInt("volume_level", 80) / 100f;
+        String lang = prefs.getString(AppConstants.PREF_LANGUAGE, AppConstants.DEFAULT_LANGUAGE);
         
-        Log.d(TAG, "Speaking: " + text);
+        if (!currentLanguage.equals(lang)) {
+            setLanguage(lang);
+        }
         
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, UTTERANCE_ID);
+        tts.setSpeechRate(speed);
+        
+        Bundle params = new Bundle();
+        params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, volume);
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_ID);
+        
+        Log.d(TAG, "Speaking: " + text + " [vol: " + volume + ", speed: " + speed + "]");
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, params, UTTERANCE_ID);
     }
 
     /**

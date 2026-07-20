@@ -9,6 +9,14 @@
     <string name="battery_status">Pin: %1$d%%</string>
     <string name="battery_speech">Mức pin hiện tại là %1$d phần trăm</string>
     <string name="battery_low_warning">. Pin yếu, vui lòng sạc thiết bị</string>
+    <string name="internet_lost">Thiết bị đã mất kết nối Internet</string>
+    <string name="internet_restored">Đã khôi phục kết nối Internet</string>
+    <string name="background_mode_title">Chế độ trợ lý chạy nền</string>
+    <string name="background_mode_desc">Cho phép trợ lý hoạt động khi đóng ứng dụng</string>
+    <string name="network_warning_toggle">CẢNH BÁO KẾT NỐI MẠNG</string>
+    <string name="service_running">Trợ lý giọng nói đang chạy nền</string>
+    <string name="stop_service">Dừng trợ lý</string>
+    <string name="notification_channel_name">Dịch vụ chạy nền Trợ lý giọng nói</string>
     <string name="press_to_speak">NHẤN ĐỂ NÓI</string>
     <string name="sos_button">SOS KHẨN CẤP</string>
     <string name="command_hint">"Lệnh của bạn"</string>
@@ -51,4 +59,6 @@
     <string name="battery_warning_toggle">CẢNH BÁO PIN YẾU</string>
     <string name="sos_delay">THỜI GIAN CHỜ SOS</string>
     <string name="seconds_unit">%1$d giây</string>
+    <string name="test_speech_rate">Đây là tốc độ đọc thử nghiệm</string>
+    <string name="test_volume">Đây là âm lượng thử nghiệm</string>
 </resources>
