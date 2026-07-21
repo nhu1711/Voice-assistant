@@ -104,7 +104,7 @@ public class SettingsFragment extends Fragment {
         speechRecognizerManager = new com.example.voiceassistant.speech.SpeechRecognizerManager(requireContext(), new com.example.voiceassistant.speech.SpeechRecognizerManager.RecognitionCallback() {
             @Override public void onReadyForSpeech() { 
                 mainHandler.post(() -> {
-                    tvCommand.setText("Đang lắng nghe...");
+                    tvCommand.setText(R.string.status_listening);
                     pulseAnimator.start();
                 }); 
             }

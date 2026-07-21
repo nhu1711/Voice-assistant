@@ -190,7 +190,7 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
                 Log.d(TAG, "[VOICE] Ready");
                 mainHandler.post(() -> {
                     if (!isAdded() || isDetached() || getView() == null) return;
-                    tvDetectionResult.setText("Đang lắng nghe câu lệnh...");
+                    tvDetectionResult.setText(R.string.status_listening);
                     startPulseAnimation();
                 });
             }
@@ -235,11 +235,12 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
                     stopPulseAnimation();
                     
                     String currentText = tvDetectionResult.getText().toString();
-                    if (!currentText.isEmpty() && !currentText.equals("Đang lắng nghe câu lệnh...") && currentText.length() > 5) {
+                    String listeningText = getString(R.string.status_listening);
+                    if (!currentText.isEmpty() && !currentText.equals(listeningText) && currentText.length() > 5) {
                         processFragmentVoiceCommand(currentText);
                         resumeDetector();
                     } else {
-                        Toast.makeText(getContext(), "Lỗi giọng nói: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.error_general) + ": " + errorMessage, Toast.LENGTH_SHORT).show();
                         resumeDetector();
                     }
                 });
@@ -262,9 +263,9 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
             Log.d(TAG, "[Detector] Resumed");
         }
         if (detectorState == DetectorState.RUNNING) {
-            tvDetectionResult.setText("Đang nhận diện...");
+            tvDetectionResult.setText(R.string.detection_status_running);
         } else {
-            tvDetectionResult.setText("Đã dừng nhận diện");
+            tvDetectionResult.setText(R.string.detection_status_stopped);
         }
     }
 
@@ -432,7 +433,7 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
             Log.d(TAG, "Overlay updated with " + objectsCount + " bounding boxes.");
 
             if (detections == null || detections.isEmpty()) {
-                tvDetectionResult.setText("Không phát hiện vật thể");
+                tvDetectionResult.setText(R.string.detection_no_object);
                 return;
             }
 
@@ -452,7 +453,8 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
             if (prominentDetection != null && prominentDetection.categories() != null && !prominentDetection.categories().isEmpty()) {
                 MyCategory category = prominentDetection.categories().get(0);
                 String enLabel = category.categoryName();
-                String viLabel = LabelTranslator.translate(enLabel);
+                String lang = getCurrentLanguage();
+                String translatedLabel = LabelTranslator.translate(enLabel, lang);
                 float score = category.score();
 
                 // Tính toán hướng (trái, phải, phía trước) dựa trên tâm X của vật thể
@@ -461,11 +463,11 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
 
                 String direction;
                 if (centerXNormalized < 0.35f) {
-                    direction = "bên trái";
+                    direction = getString(R.string.direction_left);
                 } else if (centerXNormalized > 0.65f) {
-                    direction = "bên phải";
+                    direction = getString(R.string.direction_right);
                 } else {
-                    direction = "phía trước";
+                    direction = getString(R.string.direction_front);
                 }
 
                 // Tính toán diện tích tương đối để ước lượng khoảng cách
@@ -479,29 +481,29 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
                     distCategory = DistanceEstimator.DistanceCategory.FAR;
                 }
 
-                String distanceText = DistanceEstimator.getDistanceSpeech(distCategory);
+                String distanceText = DistanceEstimator.getDistanceSpeech(requireContext(), distCategory);
                 
                 // Hiển thị kết quả văn bản
-                String displayResult = String.format("Phát hiện %s %s, %s (%.0f%%)", viLabel, direction, distanceText, score * 100);
-                tvDetectionResult.setText(displayResult);
+                String displayResult = getString(R.string.detection_pattern, translatedLabel, direction, distanceText);
+                tvDetectionResult.setText(displayResult + String.format(" (%.0f%%)", score * 100));
 
                 // Kiểm soát cooldown chống spam phát thanh
                 long currentTime = System.currentTimeMillis();
                 long timeSinceLastSpeech = currentTime - lastSpeechTime;
 
-                boolean isNewObject = !viLabel.equals(lastSpokenObjectName) 
+                boolean isNewObject = !translatedLabel.equals(lastSpokenObjectName) 
                         || !direction.equals(lastSpokenDirection) 
                         || distCategory != lastSpokenDistanceCategory;
 
                 if (isNewObject || timeSinceLastSpeech >= SPEECH_COOLDOWN_MS) {
-                    speakDetection(viLabel, direction, distanceText, distCategory);
+                    speakDetection(translatedLabel, direction, distanceText, distCategory);
                 }
             }
         });
     }
 
     private void speakDetection(String objectName, String direction, String distanceText, DistanceEstimator.DistanceCategory distCategory) {
-        String speechText = String.format("Có %s %s, %s", objectName, direction, distanceText);
+        String speechText = getString(R.string.detection_pattern, objectName, direction, distanceText);
         Log.d(TAG, "[TTS] Speaking: " + speechText);
         lastSpokenText = speechText;
         lastSpokenObjectName = objectName;
@@ -509,14 +511,14 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
         lastSpokenDistanceCategory = distCategory;
         lastSpeechTime = System.currentTimeMillis();
         
-        ttsManager.speak(speechText, "vi");
+        ttsManager.speak(speechText, getCurrentLanguage());
     }
 
     private void repeatLastSpeech() {
         if (lastSpokenText != null && !lastSpokenText.isEmpty()) {
-            ttsManager.speak(lastSpokenText, "vi");
+            ttsManager.speak(lastSpokenText, getCurrentLanguage());
         } else {
-            ttsManager.speak("Chưa phát hiện vật thể nào để đọc lại", "vi");
+            ttsManager.speak(getString(R.string.no_detection_to_repeat), getCurrentLanguage());
         }
     }
 
@@ -553,8 +555,15 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
     public void onResume() {
         super.onResume();
         Log.d(TAG, "[Fragment] onResume called");
-        ttsManager.speakNow("Nhận diện vật thể đã sẵn sàng.");
+        String lang = getCurrentLanguage();
+        String welcome = lang.equals("vi") ? "Nhận diện vật thể đã sẵn sàng." : "Object detection is ready.";
+        ttsManager.speakNow(welcome);
         detectorState = DetectorState.RUNNING;
+    }
+
+    private String getCurrentLanguage() {
+        android.content.SharedPreferences prefs = requireContext().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(AppConstants.PREF_LANGUAGE, AppConstants.DEFAULT_LANGUAGE);
     }
 
     @Override

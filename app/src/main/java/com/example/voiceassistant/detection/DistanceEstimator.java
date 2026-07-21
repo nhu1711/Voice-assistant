@@ -1,6 +1,7 @@
 package com.example.voiceassistant.detection;
 
 import android.graphics.RectF;
+import com.example.voiceassistant.R;
 
 /**
  * Lớp ước lượng khoảng cách dựa trên kích thước của bounding box
@@ -42,20 +43,26 @@ public class DistanceEstimator {
     }
 
     /**
-     * Lấy mô tả khoảng cách bằng tiếng Việt
+     * Lấy mô tả khoảng cách đa ngôn ngữ
      * 
+     * @param context Context để truy cập resources
      * @param category Nhóm khoảng cách
-     * @return Chuỗi mô tả tiếng Việt
+     * @return Chuỗi mô tả tương ứng
      */
-    public static String getDistanceSpeech(DistanceCategory category) {
+    public static String getDistanceSpeech(android.content.Context context, DistanceCategory category) {
+        int resId;
         switch (category) {
             case CLOSE:
-                return "khoảng một mét";
+                resId = R.string.distance_close;
+                break;
             case MEDIUM:
-                return "khoảng hai đến ba mét";
+                resId = R.string.distance_medium;
+                break;
             case FAR:
             default:
-                return "ở xa";
+                resId = R.string.distance_far;
+                break;
         }
+        return context.getString(resId);
     }
 }

@@ -37,14 +37,20 @@ public class LabelTranslator {
     }
 
     /**
-     * Dịch nhãn tiếng Anh sang tiếng Việt
+     * Dịch nhãn tiếng Anh sang tiếng Việt dựa trên ngôn ngữ hiện tại
      * 
      * @param englishLabel Nhãn tiếng Anh
-     * @return Nhãn tiếng Việt tương ứng, hoặc nhãn gốc viết hoa chữ cái đầu nếu không có bản dịch
+     * @param language Ngôn ngữ hiện tại ("vi" hoặc "en")
+     * @return Nhãn tương ứng
      */
-    public static String translate(String englishLabel) {
+    public static String translate(String englishLabel, String language) {
         if (englishLabel == null || englishLabel.trim().isEmpty()) {
             return "";
+        }
+        
+        if ("en".equals(language)) {
+            // Viết hoa chữ cái đầu cho tiếng Anh
+            return englishLabel.substring(0, 1).toUpperCase() + englishLabel.substring(1);
         }
         
         String key = englishLabel.toLowerCase().trim();

@@ -29,25 +29,35 @@ public class MainActivity extends AppCompatActivity {
         // Yêu cầu tất cả các quyền cần thiết ngay khi vào ứng dụng
         PermissionHelper.requestAllPermissions(this);
 
+        com.example.voiceassistant.tts.TTSManager ttsManager = com.example.voiceassistant.tts.TTSManager.getInstance(this);
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
+            String pageName = "";
 
             if (itemId == R.id.nav_home) {
                 selectedFragment = new HomeFragment();
+                pageName = getString(R.string.nav_home);
             } else if (itemId == R.id.nav_contacts) {
                 selectedFragment = new ContactsFragment();
+                pageName = getString(R.string.nav_contacts);
             } else if (itemId == R.id.nav_object_detection) {
                 selectedFragment = new ObjectDetectionFragment();
+                pageName = getString(R.string.nav_object_detection);
             } else if (itemId == R.id.nav_settings) {
                 selectedFragment = new SettingsFragment();
+                pageName = getString(R.string.nav_settings);
             }
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, selectedFragment)
                         .commit();
+                
+                // Voice feedback for navigation
+                ttsManager.speakNow(pageName);
             }
             return true;
         });

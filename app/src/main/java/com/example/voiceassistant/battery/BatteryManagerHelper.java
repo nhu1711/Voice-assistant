@@ -31,7 +31,16 @@ public class BatteryManagerHelper {
      * Tạo câu phản hồi TTS cho pin
      */
     public String getBatterySpeechResponse() {
+        android.content.SharedPreferences prefs = context.getSharedPreferences("voice_assistant_pref", Context.MODE_PRIVATE);
+        String lang = prefs.getString("language", "vi");
+        return getBatterySpeechResponse(lang);
+    }
+
+    public String getBatterySpeechResponse(String language) {
         int level = getBatteryLevel();
+        
+        // Cần sử dụng Context đã được chuyển đổi Locale nếu muốn getString() ra tiếng tương ứng
+        // Tuy nhiên ở đây chúng ta dùng Resource chuẩn dựa trên config hiện tại của app
         String response = context.getString(R.string.battery_speech, level);
         
         // Cảnh báo nếu pin dưới 20%

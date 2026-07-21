@@ -43,6 +43,17 @@
 
     <string name="camera_title">Object Detection</string>
     <string name="detection_result">Result: %1$s</string>
+    <string name="detection_status_running">Detecting...</string>
+    <string name="detection_status_stopped">Detection stopped</string>
+    <string name="detection_no_object">No objects detected</string>
+    <string name="detection_pattern">Detected %1$s %2$s, %3$s</string>
+    <string name="direction_left">on the left</string>
+    <string name="direction_right">on the right</string>
+    <string name="direction_front">in front</string>
+    <string name="distance_close">about one meter away</string>
+    <string name="distance_medium">about two to three meters away</string>
+    <string name="distance_far">far away</string>
+    <string name="no_detection_to_repeat">No objects detected yet to repeat</string>
     <string name="analyzing">Analyzing…</string>
 
     <string name="contacts_title">Emergency Contacts</string>

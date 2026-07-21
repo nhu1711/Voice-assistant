@@ -186,7 +186,8 @@ public class VoiceCommandDispatcher {
     }
 
     private void handleBatteryCommand() {
-        String response = batteryManagerHelper.getBatterySpeechResponse();
+        String lang = getCurrentLanguage();
+        String response = batteryManagerHelper.getBatterySpeechResponse(lang);
         String display = activity.getString(R.string.battery_status, batteryManagerHelper.getBatteryLevel());
         if (callback != null) callback.onResponse(display);
         ttsManager.speakNow(response);

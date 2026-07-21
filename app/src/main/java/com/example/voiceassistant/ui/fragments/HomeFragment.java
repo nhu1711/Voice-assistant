@@ -249,7 +249,8 @@ public class HomeFragment extends Fragment {
 
     private void handleDetectCommand() {
         Log.d(TAG, "Handling DETECT command");
-        String response = "Đang mở chế độ nhận diện vật thể.";
+        String lang = getCurrentLanguage();
+        String response = lang.equals("vi") ? "Đang mở chế độ nhận diện vật thể." : "Opening object detection mode.";
         tvResponse.setText(response);
         ttsManager.speak(response);
         
@@ -263,13 +264,18 @@ public class HomeFragment extends Fragment {
         }, 1500);
     }
 
+    private String getCurrentLanguage() {
+        android.content.SharedPreferences prefs = requireContext().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(AppConstants.PREF_LANGUAGE, AppConstants.DEFAULT_LANGUAGE);
+    }
+
     private int getBatteryLevel() {
         return batteryManagerHelper.getBatteryLevel();
     }
 
     private void updateSystemInfo() {
         if (isAdded()) {
-            tvTime.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()));
+            tvTime.setText(TimeFormatter.getDisplayTime(requireContext()));
             tvBattery.setText(getString(R.string.battery_status, getBatteryLevel()));
         }
     }
