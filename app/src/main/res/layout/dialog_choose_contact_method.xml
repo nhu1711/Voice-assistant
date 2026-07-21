@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_emergency_contact_title"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_enter_manually"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/enter_manually"
+        android:text="@string/enter_manually"
+        android:textSize="20sp"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_edit"
+        app:iconGravity="textStart"
+        app:iconPadding="12dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_choose_from_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginTop="12dp"
+        android:contentDescription="@string/choose_from_contacts"
+        android:text="@string/choose_from_contacts"
+        android:textSize="20sp"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_call"
+        app:iconGravity="textStart"
+        app:iconPadding="12dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_cancel"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/cancel"
+        android:textSize="18sp" />
+</LinearLayout>

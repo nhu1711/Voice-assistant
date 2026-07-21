@@ -31,6 +31,10 @@ public class VoiceCommandDispatcher {
         void onResponse(String text);
     }
 
+    public interface EmergencyCommandCallback extends CommandCallback {
+        void onSOSRequested();
+    }
+
     public VoiceCommandDispatcher(Activity activity, TTSManager ttsManager, ContactManager contactManager,
                                   CallManager callManager, BatteryManagerHelper batteryManagerHelper,
                                   CommandCallback callback) {
@@ -58,10 +62,16 @@ public class VoiceCommandDispatcher {
                 return true;
                 
             case OPEN_EMERGENCY:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Opening Emergency");
-                speakTranslated("Opening emergency screen.", "Đang mở màn hình khẩn cấp.");
-                navigateTo(R.id.nav_contacts);
-                return true;
+                if (callback instanceof EmergencyCommandCallback) {
+                    Log.d(TAG, "[VOICE] VOICE_ACTION: Starting SOS");
+                    ((EmergencyCommandCallback) callback).onSOSRequested();
+                    return false;
+                } else {
+                    Log.d(TAG, "[VOICE] VOICE_ACTION: Opening Emergency");
+                    speakTranslated("Opening emergency screen.", "Đang mở màn hình khẩn cấp.");
+                    navigateTo(R.id.nav_contacts);
+                    return true;
+                }
                 
             case OPEN_SETTINGS:
                 Log.d(TAG, "[VOICE] VOICE_ACTION: Opening Settings");

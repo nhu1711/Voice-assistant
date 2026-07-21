@@ -62,6 +62,37 @@ public class PermissionHelper {
             Manifest.permission.READ_CONTACTS
         ) == PackageManager.PERMISSION_GRANTED;
     }
+
+    /**
+     * Kiểm tra quyền vị trí cho SOS
+     */
+    public static boolean hasLocationPermission(Context context) {
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Kiểm tra quyền gửi SMS cho SOS
+     */
+    public static boolean hasSendSmsPermission(Context context) {
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.SEND_SMS
+        ) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean hasRequiredSosPermissions(Context context) {
+        return hasCallPhonePermission(context)
+                && hasSendSmsPermission(context)
+                && hasLocationPermission(context)
+                && hasRecordAudioPermission(context);
+    }
     
     /**
      * Yêu cầu quyền READ_CONTACTS

@@ -43,8 +43,18 @@ public class CommandParser {
         Log.d(TAG, "[Parser] Original: \"" + text + "\"");
         Log.d(TAG, "[Parser] Normalized: \"" + normalized + "\"");
 
+        // OPEN_EMERGENCY
+        if (containsAny(normalized, Arrays.asList(
+                "cuu", "cuu toi", "goi khan cap", "kich hoat sos", "sos", "goi cuu ho",
+                "toi can giup do", "cap cuu", "mo khan cap", "khan cap",
+                "open emergency", "emergency", "help", "help me", "call emergency", "panic"
+        ))) {
+            Log.d(TAG, "[Parser] Intent Detected: OPEN_EMERGENCY");
+            return new CommandResult(VoiceIntent.OPEN_EMERGENCY, text, "");
+        }
+
         // CALL
-        if (containsAny(normalized, Arrays.asList("goi cho", "call", "goi dien cho", "keu"))) {
+        if (containsAny(normalized, Arrays.asList("goi cho", "call", "goi dien cho"))) {
             String contactName = extractContactName(normalized);
             Log.d(TAG, "[Parser] Intent Detected: CALL, Param: " + contactName);
             return new CommandResult(VoiceIntent.CALL, text, contactName);
@@ -83,15 +93,6 @@ public class CommandParser {
         ))) {
             Log.d(TAG, "[Parser] Intent Detected: GO_HOME");
             return new CommandResult(VoiceIntent.GO_HOME, text, "");
-        }
-
-        // OPEN_EMERGENCY
-        if (containsAny(normalized, Arrays.asList(
-                "khan cap", "mo khan cap", "goi cuu ho", "sos", "cuu toi", "tro giup", "cuu", "giup", "cap cuu", "goi khan",
-                "open emergency", "emergency", "help me", "call emergency", "panic"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: OPEN_EMERGENCY");
-            return new CommandResult(VoiceIntent.OPEN_EMERGENCY, text, "");
         }
 
         // OPEN_SETTINGS
@@ -140,7 +141,7 @@ public class CommandParser {
         
         // TIME
         if (containsAny(normalized, Arrays.asList(
-                "may gio", "gio roi", "may h", "bay gio", "hien tai", "thoi gian", "bay h",
+                "may gio", "gio roi", "doc gio", "may h", "bay gio", "hien tai", "thoi gian", "bay h",
                 "time", "what time", "current time", "now", "whats the time", "tell me the time"
         ))) {
             Log.d(TAG, "[Parser] Intent Detected: TIME");
