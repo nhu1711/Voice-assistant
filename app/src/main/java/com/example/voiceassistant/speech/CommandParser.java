@@ -68,7 +68,7 @@ public class CommandParser {
 
         // STOP_OBJECT_DETECTION
         if (containsAny(normalized, Arrays.asList(
-                "tat camera", "dong camera", "thoat nhan dien", "dung nhan dien",
+                "tat camera", "dong camera", "thoat nhan dien", "dung nhan dien", "dung lai", "stop", "thoat",
                 "stop object detection", "close object detection", "exit camera", 
                 "stop camera", "turn camera off", "close vision", "cancel object detection", "stop recognition"
         ))) {
