@@ -15,13 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_title"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="@color/primary"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -30,20 +30,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardBackgroundColor="@color/secondary"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tts_speed"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -51,6 +52,8 @@
                     android:id="@+id/slider_tts_speed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:thumbColor="@color/accent"
+                    app:trackColorActive="@color/accent"
                     android:valueFrom="0.5"
                     android:valueTo="2.0"
                     android:value="1.0" />
@@ -60,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/volume"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -68,6 +71,8 @@
                     android:id="@+id/slider_volume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:thumbColor="@color/accent"
+                    app:trackColorActive="@color/accent"
                     android:valueFrom="0"
                     android:valueTo="100"
                     android:value="80" />
@@ -77,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/language"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -88,9 +93,10 @@
                     android:layout_height="64dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/vi_language"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/primary"
                     android:textSize="18sp"
-                    app:cornerRadius="8dp" />
+                    app:strokeColor="@color/primary"
+                    app:cornerRadius="16dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -99,20 +105,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardBackgroundColor="@color/secondary"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/background_mode_title"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -122,21 +129,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/background_mode_desc"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="@color/text_secondary"
                     android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="12dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="#E2E8F0" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_battery_warning"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/battery_warning_toggle"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -146,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/network_warning_toggle"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -157,20 +164,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardBackgroundColor="@color/secondary"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/read_notifications_title"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -180,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/read_notifications_desc"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="@color/text_secondary"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -194,13 +202,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="12dp"
-                        android:background="?android:attr/listDivider" />
+                        android:background="#E2E8F0" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/read_mode_title"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -214,12 +222,16 @@
                             android:id="@+id/rb_read_auto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:buttonTint="@color/primary"
+                            android:textColor="@color/text_primary"
                             android:text="@string/read_mode_auto" />
 
                         <RadioButton
                             android:id="@+id/rb_read_announce"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:buttonTint="@color/primary"
+                            android:textColor="@color/text_primary"
                             android:text="@string/read_mode_announce" />
                     </RadioGroup>
 
@@ -228,7 +240,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/selected_apps_title"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -239,8 +251,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/select_apps_button"
-                        android:textColor="?android:attr/textColorPrimary"
-                        app:cornerRadius="8dp" />
+                        android:textColor="@color/primary"
+                        app:strokeColor="@color/primary"
+                        app:cornerRadius="16dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -251,7 +264,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/sos_delay"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -261,10 +274,12 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="120dp"
             android:text="5 seconds"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/primary"
             android:textSize="18sp"
-            app:cornerRadius="8dp" />
+            app:strokeColor="@color/primary"
+            app:cornerRadius="16dp" />
 
     </LinearLayout>
     </ScrollView>
@@ -274,22 +289,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/primary"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="6dp"
         app:layout_constraintBottom_toTopOf="@id/btn_micro">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/command_hint"
-                android:textColor="#757575"
-                android:textSize="18sp"
+                android:textColor="#E2E8F0"
+                android:textSize="16sp"
                 android:textStyle="italic" />
 
             <TextView
@@ -297,8 +313,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#212121"
-                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -308,18 +324,21 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="?attr/colorPrimary"
+        android:backgroundTint="@color/accent"
         android:insetLeft="0dp"
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
         android:text="@string/press_to_speak"
+        android:textColor="@color/primary"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:cornerRadius="75dp"
         app:icon="@android:drawable/ic_btn_speak_now"
         app:iconGravity="top"
         app:iconPadding="8dp"
         app:iconSize="48dp"
+        app:iconTint="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -29,10 +29,10 @@
         android:id="@+id/ll_camera_controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/primary"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/detection_result"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -49,8 +49,8 @@
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="?attr/colorPrimary"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/accent"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
@@ -59,7 +59,8 @@
             app:icon="@android:drawable/ic_btn_speak_now"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            app:iconSize="48dp" />
+            app:iconSize="48dp"
+            app:iconTint="@color/primary" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

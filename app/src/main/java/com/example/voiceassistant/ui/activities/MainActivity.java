@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Light Status Bar with dark icons
+        getWindow().getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setStatusBarColor(androidx.core.content.ContextCompat.getColor(this, R.color.background));
+
         setContentView(R.layout.activity_main);
 
         // Yêu cầu tất cả các quyền cần thiết ngay khi vào ứng dụng
@@ -32,6 +37,21 @@ public class MainActivity extends AppCompatActivity {
         com.example.voiceassistant.tts.TTSManager ttsManager = com.example.voiceassistant.tts.TTSManager.getInstance(this);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        
+        // Custom BottomNav styling
+        int primaryColor = androidx.core.content.ContextCompat.getColor(this, R.color.primary);
+        int accentColor = androidx.core.content.ContextCompat.getColor(this, R.color.accent);
+        
+        int[][] states = new int[][] {
+            new int[] { android.R.attr.state_selected },
+            new int[] { -android.R.attr.state_selected }
+        };
+        int[] colors = new int[] { accentColor, primaryColor };
+        android.content.res.ColorStateList colorStateList = new android.content.res.ColorStateList(states, colors);
+        
+        bottomNav.setItemIconTintList(colorStateList);
+        bottomNav.setItemTextColor(colorStateList);
+
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="@string/contacts_title"
-        android:textColor="#1A237E"
+        android:textColor="@color/primary"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,14 +22,16 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_margin="16dp"
-        android:backgroundTint="#2E7D32"
+        android:backgroundTint="@color/accent"
         android:text="@string/add_contact"
+        android:textColor="@color/primary"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:cornerRadius="12dp"
+        app:cornerRadius="16dp"
         app:icon="@android:drawable/ic_input_add"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
+        app:iconTint="@color/primary"
         app:layout_constraintTop_toBottomOf="@id/tv_title_contacts" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -37,19 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_add_contact" />
-
-    <TextView
-        android:id="@+id/tv_empty_contacts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/empty_contacts"
-        android:textSize="18sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cv_result"
         app:layout_constraintTop_toBottomOf="@id/btn_add_contact" />
 
     <androidx.cardview.widget.CardView
@@ -57,22 +47,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/primary"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="6dp"
         app:layout_constraintBottom_toTopOf="@id/btn_micro">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/command_hint"
-                android:textColor="#757575"
-                android:textSize="18sp"
+                android:textColor="#E2E8F0"
+                android:textSize="16sp"
                 android:textStyle="italic" />
 
             <TextView
@@ -80,8 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#212121"
-                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -91,18 +82,21 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="?attr/colorPrimary"
+        android:backgroundTint="@color/accent"
         android:insetLeft="0dp"
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
         android:text="@string/press_to_speak"
+        android:textColor="@color/primary"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:cornerRadius="75dp"
         app:icon="@android:drawable/ic_btn_speak_now"
         app:iconGravity="top"
         app:iconPadding="8dp"
         app:iconSize="48dp"
+        app:iconTint="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
