@@ -1,10 +1,16 @@
 package com.example.voiceassistant.ui.fragments;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.View;
@@ -34,6 +40,10 @@ import com.example.voiceassistant.contacts.EmergencyContactValidator;
 import com.example.voiceassistant.contacts.PickedContact;
 import com.example.voiceassistant.data.database.entity.EmergencyContact;
 import com.example.voiceassistant.data.repository.EmergencyContactRepository;
+import com.example.voiceassistant.speech.CommandParser;
+import com.example.voiceassistant.speech.SpeechRecognizerManager;
+import com.example.voiceassistant.speech.VoiceCommandDispatcher;
+import com.example.voiceassistant.tts.TTSManager;
 import com.example.voiceassistant.ui.adapters.EmergencyContactAdapter;
 
 import java.util.List;
@@ -48,6 +58,13 @@ public class ContactsFragment extends Fragment {
     private ContactPickerManager contactPickerManager;
     private EmergencyContactPriorityManager emergencyContactPriorityManager;
     private EmergencyContactValidator emergencyContactValidator;
+    private SpeechRecognizerManager speechRecognizerManager;
+    private VoiceCommandDispatcher voiceCommandDispatcher;
+    private TTSManager ttsManager;
+    private TextView tvCommand;
+    private MaterialButton btnMicro;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private ObjectAnimator pulseAnimator;
     private PickedContact selectedContact;
     private Dialog addContactDialog;
     private Dialog editContactDialog;
@@ -70,7 +87,6 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-<<<<<<< HEAD
         isViewDestroyed = false;
         tvEmptyContacts = view.findViewById(R.id.tv_empty_contacts);
         rvEmergencyContacts = view.findViewById(R.id.rv_emergency_contacts);
@@ -83,10 +99,15 @@ public class ContactsFragment extends Fragment {
         loadEmergencyContacts();
 
         setupAddContactButton();
-=======
+        setupVoiceAssistant(view);
+        
+        return view;
+    }
+
+    private void setupVoiceAssistant(View view) {
         tvCommand = view.findViewById(R.id.tv_command);
         btnMicro = view.findViewById(R.id.btn_micro);
-        
+
         pulseAnimator = ObjectAnimator.ofPropertyValuesHolder(
                 btnMicro,
                 PropertyValuesHolder.ofFloat("scaleX", 1.2f),
@@ -95,61 +116,92 @@ public class ContactsFragment extends Fragment {
         pulseAnimator.setDuration(500);
         pulseAnimator.setRepeatCount(ValueAnimator.INFINITE);
         pulseAnimator.setRepeatMode(ValueAnimator.REVERSE);
-        
-        ttsManager = com.example.voiceassistant.tts.TTSManager.getInstance(requireContext());
-        voiceCommandDispatcher = new com.example.voiceassistant.speech.VoiceCommandDispatcher(
-                requireActivity(), ttsManager,
+
+        ttsManager = TTSManager.getInstance(requireContext());
+        voiceCommandDispatcher = new VoiceCommandDispatcher(
+                requireActivity(),
+                ttsManager,
                 new com.example.voiceassistant.contacts.ContactManager(requireContext()),
                 new com.example.voiceassistant.call.CallManager(requireContext(), ttsManager),
                 new com.example.voiceassistant.battery.BatteryManagerHelper(requireContext()),
-                text -> mainHandler.post(() -> tvCommand.setText(text))
+                text -> mainHandler.post(() -> {
+                    if (isFragmentViewActive() && tvCommand != null) {
+                        tvCommand.setText(text);
+                    }
+                })
         );
-        
-        speechRecognizerManager = new com.example.voiceassistant.speech.SpeechRecognizerManager(requireContext(), new com.example.voiceassistant.speech.SpeechRecognizerManager.RecognitionCallback() {
-            @Override public void onReadyForSpeech() { 
+
+        speechRecognizerManager = new SpeechRecognizerManager(requireContext(), new SpeechRecognizerManager.RecognitionCallback() {
+            @Override
+            public void onReadyForSpeech() {
                 mainHandler.post(() -> {
+                    if (!isFragmentViewActive()) {
+                        return;
+                    }
                     tvCommand.setText(R.string.status_listening);
                     pulseAnimator.start();
-                }); 
-            }
-            @Override public void onBeginningOfSpeech() { 
-                mainHandler.post(() -> ttsManager.setAssistantListening(true)); 
-            }
-            @Override public void onEndOfSpeech() { 
-                mainHandler.post(() -> {
-                    ttsManager.setAssistantListening(false);
-                    pulseAnimator.cancel();
-                    btnMicro.setScaleX(1f);
-                    btnMicro.setScaleY(1f);
-                }); 
-            }
-            @Override public void onResult(String text) {
-                mainHandler.post(() -> {
-                    pulseAnimator.cancel();
-                    btnMicro.setScaleX(1f);
-                    btnMicro.setScaleY(1f);
-                    tvCommand.setText(text);
-                    voiceCommandDispatcher.execute(com.example.voiceassistant.speech.CommandParser.parse(text));
                 });
             }
-            @Override public void onError(String error) { 
+
+            @Override
+            public void onBeginningOfSpeech() {
                 mainHandler.post(() -> {
-                    pulseAnimator.cancel();
-                    btnMicro.setScaleX(1f);
-                    btnMicro.setScaleY(1f);
-                    
-                    String currentText = tvCommand.getText().toString();
-                    if (currentText.length() > 5) {
-                        tvCommand.setText(currentText);
-                        voiceCommandDispatcher.execute(com.example.voiceassistant.speech.CommandParser.parse(currentText));
-                    } else if (currentText.isEmpty()) {
-                        tvCommand.setText(error); 
+                    if (ttsManager != null) {
+                        ttsManager.setAssistantListening(true);
                     }
                 });
             }
-            @Override public void onPartialResult(String partialText) { mainHandler.post(() -> tvCommand.setText(partialText)); }
+
+            @Override
+            public void onEndOfSpeech() {
+                mainHandler.post(() -> {
+                    if (ttsManager != null) {
+                        ttsManager.setAssistantListening(false);
+                    }
+                    resetMicroAnimation();
+                });
+            }
+
+            @Override
+            public void onResult(String text) {
+                mainHandler.post(() -> {
+                    if (!isFragmentViewActive()) {
+                        return;
+                    }
+                    resetMicroAnimation();
+                    tvCommand.setText(text);
+                    voiceCommandDispatcher.execute(CommandParser.parse(text));
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                mainHandler.post(() -> {
+                    if (!isFragmentViewActive()) {
+                        return;
+                    }
+                    resetMicroAnimation();
+
+                    String currentText = tvCommand.getText().toString();
+                    if (currentText.length() > 5) {
+                        tvCommand.setText(currentText);
+                        voiceCommandDispatcher.execute(CommandParser.parse(currentText));
+                    } else if (currentText.isEmpty()) {
+                        tvCommand.setText(error);
+                    }
+                });
+            }
+
+            @Override
+            public void onPartialResult(String partialText) {
+                mainHandler.post(() -> {
+                    if (isFragmentViewActive() && tvCommand != null) {
+                        tvCommand.setText(partialText);
+                    }
+                });
+            }
         });
-        
+
         btnMicro.setOnClickListener(v -> {
             if (!PermissionHelper.hasRecordAudioPermission(requireContext())) {
                 PermissionHelper.requestRecordAudioPermission(requireActivity());
@@ -157,9 +209,7 @@ public class ContactsFragment extends Fragment {
             }
             if (speechRecognizerManager.isListening()) {
                 speechRecognizerManager.stopListening();
-                pulseAnimator.cancel();
-                btnMicro.setScaleX(1f);
-                btnMicro.setScaleY(1f);
+                resetMicroAnimation();
             } else {
                 if (!SpeechRecognizer.isRecognitionAvailable(requireContext())) {
                     Toast.makeText(getContext(), "Speech recognition not available", Toast.LENGTH_SHORT).show();
@@ -170,9 +220,6 @@ public class ContactsFragment extends Fragment {
                 speechRecognizerManager.startListening();
             }
         });
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
-        
-        return view;
     }
 
     private void setupContactPermissionLauncher() {
@@ -966,6 +1013,16 @@ public class ContactsFragment extends Fragment {
         Toast.makeText(requireContext(), R.string.error_load_emergency_contacts, Toast.LENGTH_SHORT).show();
     }
 
+    private void resetMicroAnimation() {
+        if (pulseAnimator != null) {
+            pulseAnimator.cancel();
+        }
+        if (btnMicro != null) {
+            btnMicro.setScaleX(1f);
+            btnMicro.setScaleY(1f);
+        }
+    }
+
     private boolean isFragmentViewActive() {
         return !isViewDestroyed && isAdded() && getView() != null;
     }
@@ -977,12 +1034,26 @@ public class ContactsFragment extends Fragment {
         dismissEditContactDialog();
         dismissDeleteContactDialog();
         clearSelectedContact();
+        if (speechRecognizerManager != null) {
+            speechRecognizerManager.destroy();
+            speechRecognizerManager = null;
+        }
+        if (ttsManager != null) {
+            ttsManager.setAssistantListening(false);
+        }
+        mainHandler.removeCallbacksAndMessages(null);
+        resetMicroAnimation();
         isInsertInProgress = false;
         isUpdateInProgress = false;
         isDeleteInProgress = false;
         rvEmergencyContacts = null;
         tvEmptyContacts = null;
         btnAddContact = null;
+        tvCommand = null;
+        btnMicro = null;
+        pulseAnimator = null;
+        voiceCommandDispatcher = null;
+        ttsManager = null;
         super.onDestroyView();
     }
 }

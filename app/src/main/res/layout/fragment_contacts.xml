@@ -35,22 +35,15 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_margin="16dp"
-<<<<<<< HEAD
         android:backgroundTint="#2E7D32"
         android:contentDescription="@string/add_emergency_contact_content_description"
         android:text="@string/add_emergency_contact_button"
-=======
-        android:backgroundTint="@color/accent"
-        android:text="@string/add_contact"
-        android:textColor="@color/primary"
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
         android:textSize="20sp"
         android:textStyle="bold"
         app:cornerRadius="16dp"
         app:icon="@android:drawable/ic_input_add"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-<<<<<<< HEAD
         app:layout_constraintTop_toBottomOf="@id/tv_contacts_instruction" />
 
     <TextView
@@ -65,19 +58,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_add_contact" />
-=======
-        app:iconTint="@color/primary"
-        app:layout_constraintTop_toBottomOf="@id/tv_title_contacts" />
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_emergency_contacts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-<<<<<<< HEAD
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cv_result"
         app:layout_constraintTop_toBottomOf="@id/tv_contacts_order_note" />
 
     <TextView
@@ -87,13 +75,10 @@
         android:text="@string/empty_contacts"
         android:textSize="18sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cv_result"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_contacts_order_note" />
-=======
-        app:layout_constraintBottom_toTopOf="@id/cv_result"
-        app:layout_constraintTop_toBottomOf="@id/btn_add_contact" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_result"
@@ -153,6 +138,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
 
 </androidx.constraintlayout.widget.ConstraintLayout>

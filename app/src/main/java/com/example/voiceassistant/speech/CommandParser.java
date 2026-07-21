@@ -2,6 +2,7 @@ package com.example.voiceassistant.speech;
 
 import android.util.Log;
 import com.example.voiceassistant.constants.AppConstants;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,153 +36,95 @@ public class CommandParser {
         
         // Chuyển về chữ thường nhưng GIỮ NGUYÊN DẤU để trích xuất tên chính xác
         String lowerText = text.toLowerCase().trim();
+        String normalized = removeVietnameseDiacritics(lowerText);
         Log.d(TAG, "[Parser] Input: \"" + text + "\"");
 
-<<<<<<< HEAD
-        // OPEN_EMERGENCY
-        if (containsAny(normalized, Arrays.asList(
-                "cuu", "cuu toi", "goi khan cap", "kich hoat sos", "sos", "goi cuu ho",
-                "toi can giup do", "cap cuu", "mo khan cap", "khan cap",
-                "open emergency", "emergency", "help", "help me", "call emergency", "panic"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: OPEN_EMERGENCY");
-            return new CommandResult(VoiceIntent.OPEN_EMERGENCY, text, "");
-        }
-
-        // CALL
-        if (containsAny(normalized, Arrays.asList("goi cho", "call", "goi dien cho"))) {
-            String contactName = extractContactName(normalized);
-            Log.d(TAG, "[Parser] Intent Detected: CALL, Param: " + contactName);
-=======
-        // 1. Kiểm tra lệnh CALL (Ưu tiên hàng đầu)
-        if (isCallCommand(lowerText)) {
-            String contactName = extractContactName(lowerText);
-            Log.d(TAG, "[Parser] Intent: CALL, Name: " + contactName);
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
-            return new CommandResult(VoiceIntent.CALL, text, contactName);
-        }
-        
-        // 2. Kiểm tra lệnh NHẬN DIỆN VẬT THỂ
-        if (isDetectCommand(lowerText)) {
-            Log.d(TAG, "[Parser] Intent: OPEN_OBJECT_DETECTION");
-            return new CommandResult(VoiceIntent.OPEN_OBJECT_DETECTION, text, "");
-        }
-
-        // 3. Kiểm tra lệnh DỪNG NHẬN DIỆN
-        if (isStopDetectCommand(lowerText)) {
-            Log.d(TAG, "[Parser] Intent: STOP_OBJECT_DETECTION");
-            return new CommandResult(VoiceIntent.STOP_OBJECT_DETECTION, text, "");
-        }
-
-<<<<<<< HEAD
-        // GO_HOME
-        if (containsAny(normalized, Arrays.asList(
-                "ve trang chu", "tro ve", "quay lai", "ve home", "trang chu", "man hinh chinh",
-                "go home", "home", "main page", "main screen", "return home", "back home", "return", "go back", "back", "previous"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: GO_HOME");
-            return new CommandResult(VoiceIntent.GO_HOME, text, "");
-        }
-
-        // OPEN_SETTINGS
-        if (containsAny(normalized, Arrays.asList(
-                "mo cai dat", "cai dat", "thiet lap",
-                "open settings", "settings", "preferences", "configuration"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: OPEN_SETTINGS");
-            return new CommandResult(VoiceIntent.OPEN_SETTINGS, text, "");
-        }
-
-        // CLOSE_APPLICATION
-        if (containsAny(normalized, Arrays.asList(
-                "dong ung dung", "thoat ung dung", "thoat app",
-                "close app", "exit", "quit", "close application"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: CLOSE_APPLICATION");
-            return new CommandResult(VoiceIntent.CLOSE_APPLICATION, text, "");
-        }
-
-        // HELP
-        if (containsAny(normalized, Arrays.asList(
-                "huong dan", "lenh",
-                "what can i say", "voice commands", "instructions", "show commands", "how do i use this"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: HELP");
-            return new CommandResult(VoiceIntent.HELP, text, "");
-        }
-
-        // REPEAT
-        if (containsAny(normalized, Arrays.asList(
-                "nhac lai", "doc lai", "lap lai", "noi lai",
-                "repeat", "say again", "repeat that", "speak again", "last message", "read again", "repeat last"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: REPEAT");
-            return new CommandResult(VoiceIntent.REPEAT, text, "");
-        }
-
-        // CANCEL
-        if (containsAny(normalized, Arrays.asList(
-                "huy", "cancel", "never mind", "ignore", "stop listening"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: CANCEL");
-            return new CommandResult(VoiceIntent.CANCEL, text, "");
-        }
-        
-        // TIME
-        if (containsAny(normalized, Arrays.asList(
-                "may gio", "gio roi", "doc gio", "may h", "bay gio", "hien tai", "thoi gian", "bay h",
-                "time", "what time", "current time", "now", "whats the time", "tell me the time"
-        ))) {
-            Log.d(TAG, "[Parser] Intent Detected: TIME");
-=======
-        // 4. Kiểm tra lệnh THỜI GIAN
-        if (isTimeCommand(lowerText)) {
-            Log.d(TAG, "[Parser] Intent: TIME");
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
-            return new CommandResult(VoiceIntent.TIME, text, "");
-        }
-
-        // 5. Kiểm tra lệnh PIN
-        if (isBatteryCommand(lowerText)) {
-            Log.d(TAG, "[Parser] Intent: BATTERY");
-            return new CommandResult(VoiceIntent.BATTERY, text, "");
-        }
-
-        // 6. Kiểm tra lệnh SOS
-        if (isSOSCommand(lowerText)) {
+        // 1. Kiểm tra lệnh SOS
+        if (isSOSCommand(lowerText, normalized)) {
             Log.d(TAG, "[Parser] Intent: OPEN_EMERGENCY");
             return new CommandResult(VoiceIntent.OPEN_EMERGENCY, text, "");
         }
 
+        // 2. Kiểm tra lệnh CALL
+        if (isCallCommand(lowerText, normalized)) {
+            String contactName = extractContactName(lowerText);
+            Log.d(TAG, "[Parser] Intent: CALL, Name: " + contactName);
+            return new CommandResult(VoiceIntent.CALL, text, contactName);
+        }
+
+        // 3. Kiểm tra lệnh DỪNG NHẬN DIỆN
+        if (isStopDetectCommand(lowerText, normalized)) {
+            Log.d(TAG, "[Parser] Intent: STOP_OBJECT_DETECTION");
+            return new CommandResult(VoiceIntent.STOP_OBJECT_DETECTION, text, "");
+        }
+        
+        // 4. Kiểm tra lệnh NHẬN DIỆN VẬT THỂ
+        if (isDetectCommand(lowerText, normalized)) {
+            Log.d(TAG, "[Parser] Intent: OPEN_OBJECT_DETECTION");
+            return new CommandResult(VoiceIntent.OPEN_OBJECT_DETECTION, text, "");
+        }
+
+        // 5. Kiểm tra lệnh THỜI GIAN
+        if (isTimeCommand(lowerText, normalized)) {
+            Log.d(TAG, "[Parser] Intent: TIME");
+            return new CommandResult(VoiceIntent.TIME, text, "");
+        }
+
+        // 6. Kiểm tra lệnh PIN
+        if (isBatteryCommand(lowerText, normalized)) {
+            Log.d(TAG, "[Parser] Intent: BATTERY");
+            return new CommandResult(VoiceIntent.BATTERY, text, "");
+        }
+
         // 7. Kiểm tra lệnh CÀI ĐẶT
-        if (isSettingsCommand(lowerText)) {
+        if (isSettingsCommand(lowerText, normalized)) {
             Log.d(TAG, "[Parser] Intent: OPEN_SETTINGS");
             return new CommandResult(VoiceIntent.OPEN_SETTINGS, text, "");
         }
         
         // 8. Kiểm tra lệnh ĐỌC THÔNG BÁO
-        if (isReadNotificationsCommand(lowerText)) {
+        if (isReadNotificationsCommand(lowerText, normalized)) {
             Log.d(TAG, "[Parser] Intent: READ_NOTIFICATIONS");
             return new CommandResult(VoiceIntent.READ_NOTIFICATIONS, text, "");
         }
 
-        // 8. Lệnh QUAY VỀ / TRANG CHỦ
-        if (containsAny(lowerText, Arrays.asList("về trang chủ", "trở về", "quay lại", "home", "back"))) {
+        // 9. Lệnh QUAY VỀ / TRANG CHỦ
+        if (isGoHomeCommand(lowerText, normalized)) {
+            Log.d(TAG, "[Parser] Intent: GO_HOME");
             return new CommandResult(VoiceIntent.GO_HOME, text, "");
         }
 
-        // 9. Lệnh NHẮC LẠI
-        if (containsAny(lowerText, Arrays.asList("nhắc lại", "đọc lại", "lặp lại", "nói lại", "repeat"))) {
+        // 10. Lệnh ĐÓNG ỨNG DỤNG
+        if (isCloseApplicationCommand(normalized)) {
+            Log.d(TAG, "[Parser] Intent: CLOSE_APPLICATION");
+            return new CommandResult(VoiceIntent.CLOSE_APPLICATION, text, "");
+        }
+
+        // 11. Lệnh HƯỚNG DẪN
+        if (isHelpCommand(normalized)) {
+            Log.d(TAG, "[Parser] Intent: HELP");
+            return new CommandResult(VoiceIntent.HELP, text, "");
+        }
+
+        // 12. Lệnh NHẮC LẠI
+        if (isRepeatCommand(lowerText, normalized)) {
+            Log.d(TAG, "[Parser] Intent: REPEAT");
             return new CommandResult(VoiceIntent.REPEAT, text, "");
+        }
+
+        // 13. Lệnh HỦY
+        if (isCancelCommand(normalized)) {
+            Log.d(TAG, "[Parser] Intent: CANCEL");
+            return new CommandResult(VoiceIntent.CANCEL, text, "");
         }
 
         Log.d(TAG, "[Parser] Intent: UNKNOWN");
         return new CommandResult(VoiceIntent.UNKNOWN, text, "");
     }
 
-    private static boolean isCallCommand(String text) {
-        return text.contains("gọi cho") || text.contains("call") || 
-               text.contains("goi cho") || text.contains("kêu");
+    private static boolean isCallCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("gọi cho", "gọi điện cho", "call"))
+                || containsAny(normalized, Arrays.asList("goi cho", "goi dien cho", "keu"));
     }
 
     private static String extractContactName(String text) {
@@ -201,54 +144,80 @@ public class CommandParser {
         return result;
     }
 
-    private static boolean isTimeCommand(String text) {
-        String[] keywords = {"mấy giờ", "giờ rồi", "mấy h", "bây giờ", "hiện tại", "thời gian", "time", "what time"};
-        for (String keyword : keywords) {
-            if (text.contains(keyword)) return true;
-        }
-        return false;
+    private static boolean isTimeCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("mấy giờ", "giờ rồi", "mấy h", "bây giờ", "hiện tại", "thời gian"))
+                || containsAny(normalized, Arrays.asList(
+                "may gio", "gio roi", "doc gio", "may h", "bay gio", "hien tai", "thoi gian", "bay h",
+                "time", "what time", "current time", "now", "whats the time", "tell me the time"
+        ));
     }
 
-    private static boolean isBatteryCommand(String text) {
-        String[] keywords = {"pin", "phần trăm pin", "battery", "percent", "battery level"};
-        for (String keyword : keywords) {
-            if (text.contains(keyword)) return true;
-        }
-        return false;
+    private static boolean isBatteryCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("pin", "phần trăm pin", "battery", "percent", "battery level"))
+                || containsAny(normalized, Arrays.asList("pin", "phan tram pin", "battery", "percent", "battery level"));
     }
 
-    private static boolean isSOSCommand(String text) {
-        String[] keywords = {"cứu", "sos", "giúp", "help", "emergency", "khẩn cấp"};
-        for (String keyword : keywords) {
-            if (text.contains(keyword)) return true;
-        }
-        return false;
+    private static boolean isSOSCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("cứu", "sos", "giúp", "help", "emergency", "khẩn cấp"))
+                || containsAny(normalized, Arrays.asList(
+                "cuu", "cuu toi", "goi khan cap", "kich hoat sos", "sos", "goi cuu ho",
+                "toi can giup do", "cap cuu", "mo khan cap", "khan cap",
+                "open emergency", "emergency", "help", "help me", "call emergency", "panic"
+        ));
     }
 
-    private static boolean isSettingsCommand(String text) {
-        String[] keywords = {"cài đặt", "thiết lập", "settings", "setting", "cai dat", "thiet lap"};
-        for (String keyword : keywords) {
-            if (text.contains(keyword)) return true;
-        }
-        return false;
+    private static boolean isSettingsCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("cài đặt", "thiết lập", "settings", "setting"))
+                || containsAny(normalized, Arrays.asList(
+                "mo cai dat", "cai dat", "thiet lap", "open settings", "settings", "preferences", "configuration"
+        ));
     }
 
-    private static boolean isDetectCommand(String text) {
-        return text.contains("nhận diện") || text.contains("detect") || 
-               text.contains("vật thể") || text.contains("object") || text.contains("mở camera");
+    private static boolean isDetectCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("nhận diện", "vật thể", "mở camera", "detect", "object"))
+                || containsAny(normalized, Arrays.asList("nhan dien", "vat the", "mo camera", "detect", "object"));
     }
 
-    private static boolean isStopDetectCommand(String text) {
-        return text.contains("tắt camera") || text.contains("đóng camera") || 
-               text.contains("thoát nhận diện") || text.contains("dừng nhận diện");
+    private static boolean isStopDetectCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("tắt camera", "đóng camera", "thoát nhận diện", "dừng nhận diện"))
+                || containsAny(normalized, Arrays.asList("tat camera", "dong camera", "thoat nhan dien", "dung nhan dien"));
     }
 
-    private static boolean isReadNotificationsCommand(String text) {
-        String[] keywords = {"đọc tin nhắn", "đọc thông báo", "tin nhắn mới", "read message", "read notification"};
-        for (String keyword : keywords) {
-            if (text.contains(keyword)) return true;
-        }
-        return false;
+    private static boolean isReadNotificationsCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("đọc tin nhắn", "đọc thông báo", "tin nhắn mới", "read message", "read notification"))
+                || containsAny(normalized, Arrays.asList("doc tin nhan", "doc thong bao", "tin nhan moi", "read message", "read notification"));
+    }
+
+    private static boolean isGoHomeCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("về trang chủ", "trở về", "quay lại", "home", "back"))
+                || containsAny(normalized, Arrays.asList(
+                "ve trang chu", "tro ve", "quay lai", "ve home", "trang chu", "man hinh chinh",
+                "go home", "home", "main page", "main screen", "return home", "back home", "return", "go back", "back", "previous"
+        ));
+    }
+
+    private static boolean isCloseApplicationCommand(String normalized) {
+        return containsAny(normalized, Arrays.asList(
+                "dong ung dung", "thoat ung dung", "thoat app", "close app", "exit", "quit", "close application"
+        ));
+    }
+
+    private static boolean isHelpCommand(String normalized) {
+        return containsAny(normalized, Arrays.asList(
+                "huong dan", "lenh", "what can i say", "voice commands", "instructions", "show commands", "how do i use this"
+        ));
+    }
+
+    private static boolean isRepeatCommand(String text, String normalized) {
+        return containsAny(text, Arrays.asList("nhắc lại", "đọc lại", "lặp lại", "nói lại", "repeat"))
+                || containsAny(normalized, Arrays.asList(
+                "nhac lai", "doc lai", "lap lai", "noi lai", "repeat", "say again", "repeat that",
+                "speak again", "last message", "read again", "repeat last"
+        ));
+    }
+
+    private static boolean isCancelCommand(String normalized) {
+        return containsAny(normalized, Arrays.asList("huy", "cancel", "never mind", "ignore", "stop listening"));
     }
 
     private static boolean containsAny(String text, List<String> keywords) {
@@ -256,5 +225,10 @@ public class CommandParser {
             if (text.contains(keyword)) return true;
         }
         return false;
+    }
+
+    private static String removeVietnameseDiacritics(String text) {
+        String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replace('đ', 'd');
     }
 }

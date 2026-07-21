@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> appSettingsLauncher;
     private boolean hasRequestedRequiredPermissions;
     private boolean mainContentInitialized;
+    private com.example.voiceassistant.tts.TTSManager ttsManager;
 
     @Override
     protected void attachBaseContext(android.content.Context newBase) {
@@ -48,17 +49,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
         setupPermissionLaunchers();
-=======
-        
+
         // Light Status Bar with dark icons
         getWindow().getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         getWindow().setStatusBarColor(androidx.core.content.ContextCompat.getColor(this, R.color.background));
 
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
         setContentView(R.layout.activity_main);
         initViews();
+        setupBottomNavigationStyle();
         setupNavigation();
         setupPermissionActions();
         updatePermissionGate(savedInstanceState == null);
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-<<<<<<< HEAD
     private void setupPermissionLaunchers() {
         requiredPermissionsLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -91,29 +89,26 @@ public class MainActivity extends AppCompatActivity {
         btnGrantRequiredPermissions = findViewById(R.id.btn_grant_required_permissions);
         btnOpenAppSettings = findViewById(R.id.btn_open_app_settings);
         tvPermissionError = findViewById(R.id.tv_permission_error);
+        ttsManager = com.example.voiceassistant.tts.TTSManager.getInstance(this);
     }
 
-    private void setupNavigation() {
-=======
-        com.example.voiceassistant.tts.TTSManager ttsManager = com.example.voiceassistant.tts.TTSManager.getInstance(this);
-
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        
+    private void setupBottomNavigationStyle() {
         // Custom BottomNav styling
         int primaryColor = androidx.core.content.ContextCompat.getColor(this, R.color.primary);
         int accentColor = androidx.core.content.ContextCompat.getColor(this, R.color.accent);
-        
+
         int[][] states = new int[][] {
             new int[] { android.R.attr.state_selected },
             new int[] { -android.R.attr.state_selected }
         };
         int[] colors = new int[] { accentColor, primaryColor };
         android.content.res.ColorStateList colorStateList = new android.content.res.ColorStateList(states, colors);
-        
+
         bottomNav.setItemIconTintList(colorStateList);
         bottomNav.setItemTextColor(colorStateList);
+    }
 
->>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
+    private void setupNavigation() {
         bottomNav.setOnItemSelectedListener(item -> {
             if (!PermissionHelper.hasRequiredSosPermissions(this)) {
                 updatePermissionGate(false);
