@@ -73,8 +73,14 @@ public class CommandParser {
             Log.d(TAG, "[Parser] Intent: OPEN_EMERGENCY");
             return new CommandResult(VoiceIntent.OPEN_EMERGENCY, text, "");
         }
+
+        // 7. Kiểm tra lệnh CÀI ĐẶT
+        if (isSettingsCommand(lowerText)) {
+            Log.d(TAG, "[Parser] Intent: OPEN_SETTINGS");
+            return new CommandResult(VoiceIntent.OPEN_SETTINGS, text, "");
+        }
         
-        // 7. Kiểm tra lệnh ĐỌC THÔNG BÁO
+        // 8. Kiểm tra lệnh ĐỌC THÔNG BÁO
         if (isReadNotificationsCommand(lowerText)) {
             Log.d(TAG, "[Parser] Intent: READ_NOTIFICATIONS");
             return new CommandResult(VoiceIntent.READ_NOTIFICATIONS, text, "");
@@ -134,6 +140,14 @@ public class CommandParser {
 
     private static boolean isSOSCommand(String text) {
         String[] keywords = {"cứu", "sos", "giúp", "help", "emergency", "khẩn cấp"};
+        for (String keyword : keywords) {
+            if (text.contains(keyword)) return true;
+        }
+        return false;
+    }
+
+    private static boolean isSettingsCommand(String text) {
+        String[] keywords = {"cài đặt", "thiết lập", "settings", "setting", "cai dat", "thiet lap"};
         for (String keyword : keywords) {
             if (text.contains(keyword)) return true;
         }
