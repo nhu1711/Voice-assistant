@@ -9,6 +9,7 @@
     <string name="battery_status">Pin: %1$d%%</string>
     <string name="battery_speech">Mức pin hiện tại là %1$d phần trăm</string>
     <string name="battery_low_warning">. Pin yếu, vui lòng sạc thiết bị</string>
+    <string name="battery_charging"> và đang được sạc</string>
     <string name="internet_lost">Thiết bị đã mất kết nối Internet</string>
     <string name="internet_restored">Đã khôi phục kết nối Internet</string>
     <string name="background_mode_title">Chế độ trợ lý chạy nền</string>
@@ -71,6 +72,17 @@
 
     <string name="camera_title">Nhận diện vật thể</string>
     <string name="detection_result">Kết quả: %1$s</string>
+    <string name="detection_status_running">Đang nhận diện…</string>
+    <string name="detection_status_stopped">Đã dừng nhận diện</string>
+    <string name="detection_no_object">Không phát hiện vật thể</string>
+    <string name="detection_pattern">Có %1$s %2$s, %3$s</string>
+    <string name="direction_left">bên trái</string>
+    <string name="direction_right">bên phải</string>
+    <string name="direction_front">phía trước</string>
+    <string name="distance_close">khoảng một mét</string>
+    <string name="distance_medium">khoảng hai đến ba mét</string>
+    <string name="distance_far">ở xa</string>
+    <string name="no_detection_to_repeat">Chưa phát hiện vật thể nào để đọc lại</string>
     <string name="analyzing">Đang phân tích…</string>
 
     <string name="contacts_title">Liên hệ khẩn cấp</string>
@@ -134,6 +146,19 @@
     <string name="test_speech_rate">Đây là tốc độ đọc thử nghiệm</string>
     <string name="test_volume">Đây là âm lượng thử nghiệm</string>
     
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">Trợ lý giọng nói thông minh</string>
+    <string name="onboarding_desc_1">Trợ lý dành riêng cho người cao tuổi và người khiếm thị, hỗ trợ nhiều tính năng hữu ích qua giọng nói.</string>
+    <string name="onboarding_title_2">Nhận diện vật thể</string>
+    <string name="onboarding_desc_2">Mở camera để nhận diện các vật thể xung quanh và hướng đi một cách dễ dàng.</string>
+    <string name="onboarding_title_3">Chế độ chạy nền</string>
+    <string name="onboarding_desc_3">Trợ lý hoạt động ngầm để theo dõi pin và đọc thông báo ngay cả khi đóng ứng dụng.</string>
+    <string name="btn_next">Tiếp theo</string>
+    <string name="btn_get_started">Bắt đầu ngay</string>
+    <string name="user_guide_title">Hướng dẫn sử dụng</string>
+    <string name="welcome_back">Chào mừng trở lại với trợ lý giọng nói thông minh</string>
+    <string name="user_guide_content">1. Cách sử dụng giọng nói:\nNhấn vào nút Micro lớn màu cam ở cạnh dưới màn hình và nói các lệnh như: \'Gọi cho...\', \'Mấy giờ rồi\', \'Pin còn bao nhiêu\'.\n\n2. Nhận diện vật thể:\nChuyển sang tab Camera, ứng dụng sẽ tự động nhận diện và đọc tên vật thể kèm hướng đi (trái, phải, phía trước).\n\n3. Chế độ chạy nền:\nBật chế độ này trong Cài đặt để nhận cảnh báo pin yếu và đọc thông báo tin nhắn ngay cả khi thoát ứng dụng.\n\n4. Cuộc gọi khẩn cấp:\nNhấn nút SOS màu đỏ ở trang chủ hoặc ra lệnh bằng giọng nói \'Cứu tôi\' để thực hiện các cuộc gọi khẩn cấp đã lưu.</string>
+
     <string name="no_unread_notifications">Bạn không có thông báo nào chưa đọc.</string>
     <string name="reading_notifications">Bạn có %1$d thông báo chưa đọc</string>
     <string name="reading_notifications_ui">Đang đọc %1$d thông báo</string>

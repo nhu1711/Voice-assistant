@@ -11,6 +11,7 @@ import android.util.Log;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.Tensor;
 import com.example.voiceassistant.detection.LabelTranslator;
+import com.example.voiceassistant.constants.AppConstants;
 
 import java.io.FileInputStream;
 import java.nio.ByteBuffer;
@@ -252,9 +253,11 @@ public class ObjectDetectorManager {
                     Math.min(imgH, ymax * imgH)
             );
             
-            String viLabel = LabelTranslator.translate(labelName);
+            String lang = context.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE)
+                    .getString(AppConstants.PREF_LANGUAGE, AppConstants.DEFAULT_LANGUAGE);
+            String translatedLabel = LabelTranslator.translate(labelName, lang);
             Log.d(TAG, String.format("[Detector] score: %.2f, class index: %d, bounding boxes: [%.1f, %.1f, %.1f, %.1f]", score, classId, box.left, box.top, box.right, box.bottom));
-            Log.d(TAG, String.format("[Detector] COCO class id: %d, English label: %s, Vietnamese translation: %s", classId, labelName, viLabel));
+            Log.d(TAG, String.format("[Detector] COCO class id: %d, English label: %s, Translated label: %s", classId, labelName, translatedLabel));
             
             MyCategory category = new MyCategory(labelName, score);
             results.add(new MyDetection(box, category));

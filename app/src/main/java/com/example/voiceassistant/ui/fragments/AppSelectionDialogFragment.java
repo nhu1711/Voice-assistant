@@ -78,7 +78,16 @@ public class AppSelectionDialogFragment extends DialogFragment {
                 }
             }
 
-            Collections.sort(apps, (a1, a2) -> a1.name.compareToIgnoreCase(a2.name));
+            // Sắp xếp: Ưu tiên app được chọn lên đầu, sau đó sắp xếp theo tên
+            Collections.sort(apps, (a1, a2) -> {
+                boolean isA1Selected = selectedPackages.contains(a1.packageName);
+                boolean isA2Selected = selectedPackages.contains(a2.packageName);
+                
+                if (isA1Selected && !isA2Selected) return -1;
+                if (!isA1Selected && isA2Selected) return 1;
+                
+                return a1.name.compareToIgnoreCase(a2.name);
+            });
 
             requireActivity().runOnUiThread(() -> {
                 appList = apps;

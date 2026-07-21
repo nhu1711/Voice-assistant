@@ -145,6 +145,10 @@ public class TTSManager implements TextToSpeech.OnInitListener {
             result == TextToSpeech.LANG_NOT_SUPPORTED) {
             Log.w(TAG, "Language not supported: " + language + ", using fallback");
             tts.setLanguage(Locale.US);
+        } else {
+            // Cập nhật lại currentLanguage từ locale thực tế của tts nếu cần
+            // Nhưng ở đây ta tin tưởng setLanguage thành công
+            Log.d(TAG, "TTS Language set to: " + locale.getDisplayName());
         }
     }
     
@@ -154,7 +158,7 @@ public class TTSManager implements TextToSpeech.OnInitListener {
      * Đưa câu nói vào hàng đợi (Queue) mặc định là mức LOW (Dành cho Object Detection)
      */
     public synchronized void speak(String text) {
-        speakWithPriority(text, currentLanguage, TTSPriority.LOW);
+        speakWithPriority(text, getSavedLanguage(), TTSPriority.LOW);
     }
 
     /**
@@ -168,14 +172,19 @@ public class TTSManager implements TextToSpeech.OnInitListener {
      * Lệnh đọc tương tác trực tiếp (Dành cho phản hồi sau khi nghe) - Mức NORMAL
      */
     public synchronized void speakNow(String text) {
-        speakWithPriority(text, currentLanguage, TTSPriority.NORMAL);
+        speakWithPriority(text, getSavedLanguage(), TTSPriority.NORMAL);
     }
     
     /**
      * Thông báo khẩn cấp - Mức HIGH
      */
     public synchronized void speakEmergency(String text) {
-        speakWithPriority(text, currentLanguage, TTSPriority.HIGH);
+        speakWithPriority(text, getSavedLanguage(), TTSPriority.HIGH);
+    }
+
+    private String getSavedLanguage() {
+        android.content.SharedPreferences prefs = context.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(AppConstants.PREF_LANGUAGE, AppConstants.DEFAULT_LANGUAGE);
     }
     
     private synchronized void speakWithPriority(String text, String language, TTSPriority priority) {

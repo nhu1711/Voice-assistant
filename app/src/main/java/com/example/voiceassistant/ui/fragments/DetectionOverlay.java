@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.voiceassistant.detection.MyCategory;
 import com.example.voiceassistant.detection.MyDetection;
 import com.example.voiceassistant.detection.LabelTranslator;
+import com.example.voiceassistant.constants.AppConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,12 +110,15 @@ public class DetectionOverlay extends View {
             if (detection.categories() != null && !detection.categories().isEmpty()) {
                 MyCategory category = detection.categories().get(0);
                 String enLabel = category.categoryName();
-                String viLabel = LabelTranslator.translate(enLabel);
+                
+                String lang = getContext().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE)
+                        .getString(AppConstants.PREF_LANGUAGE, AppConstants.DEFAULT_LANGUAGE);
+                String translatedLabel = LabelTranslator.translate(enLabel, lang);
                 float score = category.score();
 
                 Log.d(TAG, String.format("[Overlay] Bounding boxes drawn. Coordinates: [%.1f, %.1f, %.1f, %.1f] for %s", left, top, right, bottom, enLabel));
 
-                String displayText = String.format("%s (%.0f%%)", viLabel, score * 100);
+                String displayText = String.format("%s (%.0f%%)", translatedLabel, score * 100);
 
                 // Đo chiều rộng của text để tạo hình chữ nhật nền vừa vặn
                 float textWidth = textPaint.measureText(displayText);

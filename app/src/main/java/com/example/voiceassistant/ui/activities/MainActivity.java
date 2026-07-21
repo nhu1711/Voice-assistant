@@ -48,7 +48,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
         setupPermissionLaunchers();
+=======
+        
+        // Light Status Bar with dark icons
+        getWindow().getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setStatusBarColor(androidx.core.content.ContextCompat.getColor(this, R.color.background));
+
+>>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
         setContentView(R.layout.activity_main);
         initViews();
         setupNavigation();
@@ -64,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+<<<<<<< HEAD
     private void setupPermissionLaunchers() {
         requiredPermissionsLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -85,6 +94,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigation() {
+=======
+        com.example.voiceassistant.tts.TTSManager ttsManager = com.example.voiceassistant.tts.TTSManager.getInstance(this);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        
+        // Custom BottomNav styling
+        int primaryColor = androidx.core.content.ContextCompat.getColor(this, R.color.primary);
+        int accentColor = androidx.core.content.ContextCompat.getColor(this, R.color.accent);
+        
+        int[][] states = new int[][] {
+            new int[] { android.R.attr.state_selected },
+            new int[] { -android.R.attr.state_selected }
+        };
+        int[] colors = new int[] { accentColor, primaryColor };
+        android.content.res.ColorStateList colorStateList = new android.content.res.ColorStateList(states, colors);
+        
+        bottomNav.setItemIconTintList(colorStateList);
+        bottomNav.setItemTextColor(colorStateList);
+
+>>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
         bottomNav.setOnItemSelectedListener(item -> {
             if (!PermissionHelper.hasRequiredSosPermissions(this)) {
                 updatePermissionGate(false);
@@ -93,21 +122,29 @@ public class MainActivity extends AppCompatActivity {
 
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
+            String pageName = "";
 
             if (itemId == R.id.nav_home) {
                 selectedFragment = new HomeFragment();
+                pageName = getString(R.string.nav_home);
             } else if (itemId == R.id.nav_contacts) {
                 selectedFragment = new ContactsFragment();
+                pageName = getString(R.string.nav_contacts);
             } else if (itemId == R.id.nav_object_detection) {
                 selectedFragment = new ObjectDetectionFragment();
+                pageName = getString(R.string.nav_object_detection);
             } else if (itemId == R.id.nav_settings) {
                 selectedFragment = new SettingsFragment();
+                pageName = getString(R.string.nav_settings);
             }
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, selectedFragment)
                         .commit();
+                
+                // Voice feedback for navigation
+                ttsManager.speakNow(pageName);
             }
             return true;
         });

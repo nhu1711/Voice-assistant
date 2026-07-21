@@ -5,24 +5,34 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:cardBackgroundColor="@color/secondary"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/tv_priority_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:background="#E8EAF6"
             android:paddingHorizontal="10dp"
             android:paddingVertical="6dp"
             android:text="@string/priority_label"
             android:textColor="#3F51B5"
             android:textSize="16sp"
+=======
+            android:background="@drawable/bg_badge_primary"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="@string/priority_label"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+>>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,8 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Mẹ"
-            android:textColor="#212121"
-            android:textSize="24sp"
+            android:textColor="@color/text_primary"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/btn_edit_contact"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,9 +57,14 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="4dp"
             android:text="0901234567"
+<<<<<<< HEAD
             android:textColor="#757575"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/btn_edit_contact"
+=======
+            android:textColor="@color/text_secondary"
+            android:textSize="18sp"
+>>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_contact_name" />
 
@@ -85,6 +100,11 @@
             android:contentDescription="@string/delete_contact"
             android:padding="12dp"
             android:src="@android:drawable/ic_menu_delete"
+<<<<<<< HEAD
+=======
+            app:tint="@color/primary"
+            app:layout_constraintBottom_toBottomOf="parent"
+>>>>>>> 57c73549ecdb92730ab75ec96b1bc0b5b3d00228
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

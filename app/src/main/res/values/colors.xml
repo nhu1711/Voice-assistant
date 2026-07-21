@@ -3,13 +3,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
-    <!-- Accessible Color Palette for Elderly / Visually Impaired -->
-    <color name="primary">#1565C0</color> <!-- Blue 800 - High Contrast -->
-    <color name="primary_dark">#0D47A1</color>
-    <color name="accent">#D32F2F</color> <!-- Red 700 - Urgent / Alert -->
-    <color name="background">#F0F4F8</color> <!-- Anti-glare soft background -->
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#424242</color>
-    <color name="success">#2E7D32</color> <!-- Green 800 -->
-    <color name="button_disabled">#9E9E9E</color>
+    <!-- Modern Productive Palette (Based on User Image) -->
+    <color name="primary">#1E3E45</color> <!-- Dark Teal Blue -->
+    <color name="primary_dark">#132A2F</color>
+    <color name="accent">#FEA64C</color> <!-- Soft Orange / Amber -->
+    <color name="secondary">#FFF4E6</color> <!-- Pale Peach / Cream -->
+    <color name="background">#F8FAFC</color> <!-- Soft Off-white -->
+
+    <color name="text_primary">#1E293B</color> <!-- Slate Dark -->
+    <color name="text_secondary">#64748B</color> <!-- Slate Medium -->
+
+    <color name="sos_red">#D32F2F</color> <!-- Keep SOS noticeable -->
+    <color name="success">#2E7D32</color>
+    <color name="button_disabled">#CBD5E1</color>
 </resources>

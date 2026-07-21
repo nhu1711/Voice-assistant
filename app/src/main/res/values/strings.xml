@@ -9,6 +9,7 @@
     <string name="battery_status">Battery: %1$d%%</string>
     <string name="battery_speech">Your battery level is %1$d percent</string>
     <string name="battery_low_warning">. Low battery, please charge your device</string>
+    <string name="battery_charging"> and currently charging</string>
     <string name="internet_lost">Internet connection lost</string>
     <string name="internet_restored">Internet connection restored</string>
     <string name="background_mode_title">Background Assistant Mode</string>
@@ -73,6 +74,17 @@
 
     <string name="camera_title">Object Detection</string>
     <string name="detection_result">Result: %1$s</string>
+    <string name="detection_status_running">Detecting...</string>
+    <string name="detection_status_stopped">Detection stopped</string>
+    <string name="detection_no_object">No objects detected</string>
+    <string name="detection_pattern">Detected %1$s %2$s, %3$s</string>
+    <string name="direction_left">on the left</string>
+    <string name="direction_right">on the right</string>
+    <string name="direction_front">in front</string>
+    <string name="distance_close">about one meter away</string>
+    <string name="distance_medium">about two to three meters away</string>
+    <string name="distance_far">far away</string>
+    <string name="no_detection_to_repeat">No objects detected yet to repeat</string>
     <string name="analyzing">Analyzing…</string>
 
     <string name="contacts_title">Emergency Contacts</string>
@@ -136,6 +148,19 @@
     <string name="test_speech_rate">This is the new speech rate</string>
     <string name="test_volume">This is the new volume</string>
     
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">Smart Voice Assistant</string>
+    <string name="onboarding_desc_1">The assistant is designed for the elderly and visually impaired, supporting many useful features via voice.</string>
+    <string name="onboarding_title_2">Object Detection</string>
+    <string name="onboarding_desc_2">Open camera to identify surrounding objects and directions easily.</string>
+    <string name="onboarding_title_3">Background Mode</string>
+    <string name="onboarding_desc_3">Assistant runs in the background to monitor battery and read notifications even when the app is closed.</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_get_started">Get Started</string>
+    <string name="user_guide_title">User Guide</string>
+    <string name="welcome_back">Welcome back to Smart Voice Assistant</string>
+    <string name="user_guide_content">1. How to use voice:\nTap the large orange Micro button at the bottom and say commands like: \'Call...\', \'What time is it\', \'How much battery left\'.\n\n2. Object Detection:\nSwitch to the Camera tab, the app will automatically detect and read object names with directions (left, right, front).\n\n3. Background Mode:\nEnable this mode in Settings to receive low battery alerts and read message notifications even when the app is closed.\n\n4. Emergency Calls:\nPress the red SOS button on the home screen or say the voice command \'Help me\' to make saved emergency calls.</string>
+
     <string name="no_unread_notifications">You have no unread notifications.</string>
     <string name="reading_notifications">You have %1$d unread notifications</string>
     <string name="reading_notifications_ui">Reading %1$d notifications</string>
