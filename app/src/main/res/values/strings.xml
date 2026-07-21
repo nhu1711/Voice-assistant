@@ -9,6 +9,7 @@
     <string name="battery_status">Battery: %1$d%%</string>
     <string name="battery_speech">Your battery level is %1$d percent</string>
     <string name="battery_low_warning">. Low battery, please charge your device</string>
+    <string name="battery_charging"> and currently charging</string>
     <string name="internet_lost">Internet connection lost</string>
     <string name="internet_restored">Internet connection restored</string>
     <string name="background_mode_title">Background Assistant Mode</string>

@@ -9,6 +9,7 @@
     <string name="battery_status">Pin: %1$d%%</string>
     <string name="battery_speech">Mức pin hiện tại là %1$d phần trăm</string>
     <string name="battery_low_warning">. Pin yếu, vui lòng sạc thiết bị</string>
+    <string name="battery_charging"> và đang được sạc</string>
     <string name="internet_lost">Thiết bị đã mất kết nối Internet</string>
     <string name="internet_restored">Đã khôi phục kết nối Internet</string>
     <string name="background_mode_title">Chế độ trợ lý chạy nền</string>

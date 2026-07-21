@@ -28,23 +28,38 @@ public class BatteryManagerHelper {
     }
 
     /**
+     * Kiểm tra xem thiết bị có đang sạc hay không
+     */
+    public boolean isCharging() {
+        android.content.IntentFilter ifilter = new android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED);
+        android.content.Intent batteryStatus = context.registerReceiver(null, ifilter);
+        if (batteryStatus != null) {
+            int status = batteryStatus.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1);
+            return status == android.os.BatteryManager.BATTERY_STATUS_CHARGING ||
+                   status == android.os.BatteryManager.BATTERY_STATUS_FULL;
+        }
+        return false;
+    }
+
+    /**
      * Tạo câu phản hồi TTS cho pin
      */
     public String getBatterySpeechResponse() {
-        android.content.SharedPreferences prefs = context.getSharedPreferences("voice_assistant_pref", Context.MODE_PRIVATE);
+        android.content.SharedPreferences prefs = context.getSharedPreferences("voice_assistant_pref", android.content.Context.MODE_PRIVATE);
         String lang = prefs.getString("language", "vi");
         return getBatterySpeechResponse(lang);
     }
 
     public String getBatterySpeechResponse(String language) {
         int level = getBatteryLevel();
+        boolean charging = isCharging();
         
-        // Cần sử dụng Context đã được chuyển đổi Locale nếu muốn getString() ra tiếng tương ứng
-        // Tuy nhiên ở đây chúng ta dùng Resource chuẩn dựa trên config hiện tại của app
         String response = context.getString(R.string.battery_speech, level);
         
-        // Cảnh báo nếu pin dưới 20%
-        if (level < 20) {
+        if (charging) {
+            response += context.getString(R.string.battery_charging);
+        } else if (level < 20) {
+            // Chỉ yêu cầu sạc khi pin thấp VÀ KHÔNG đang sạc
             response += context.getString(R.string.battery_low_warning);
         }
         
