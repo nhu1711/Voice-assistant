@@ -84,6 +84,7 @@
     <string name="btn_next">Tiếp theo</string>
     <string name="btn_get_started">Bắt đầu ngay</string>
     <string name="user_guide_title">Hướng dẫn sử dụng</string>
+    <string name="welcome_back">Chào mừng trở lại với trợ lý giọng nói thông minh</string>
     <string name="user_guide_content">1. Cách sử dụng giọng nói:\nNhấn vào nút Micro lớn màu cam ở cạnh dưới màn hình và nói các lệnh như: \'Gọi cho...\', \'Mấy giờ rồi\', \'Pin còn bao nhiêu\'.\n\n2. Nhận diện vật thể:\nChuyển sang tab Camera, ứng dụng sẽ tự động nhận diện và đọc tên vật thể kèm hướng đi (trái, phải, phía trước).\n\n3. Chế độ chạy nền:\nBật chế độ này trong Cài đặt để nhận cảnh báo pin yếu và đọc thông báo tin nhắn ngay cả khi thoát ứng dụng.\n\n4. Cuộc gọi khẩn cấp:\nNhấn nút SOS màu đỏ ở trang chủ hoặc ra lệnh bằng giọng nói \'Cứu tôi\' để thực hiện các cuộc gọi khẩn cấp đã lưu.</string>
 
     <string name="no_unread_notifications">Bạn không có thông báo nào chưa đọc.</string>

@@ -86,6 +86,7 @@
     <string name="btn_next">Next</string>
     <string name="btn_get_started">Get Started</string>
     <string name="user_guide_title">User Guide</string>
+    <string name="welcome_back">Welcome back to Smart Voice Assistant</string>
     <string name="user_guide_content">1. How to use voice:\nTap the large orange Micro button at the bottom and say commands like: \'Call...\', \'What time is it\', \'How much battery left\'.\n\n2. Object Detection:\nSwitch to the Camera tab, the app will automatically detect and read object names with directions (left, right, front).\n\n3. Background Mode:\nEnable this mode in Settings to receive low battery alerts and read message notifications even when the app is closed.\n\n4. Emergency Calls:\nPress the red SOS button on the home screen or say the voice command \'Help me\' to make saved emergency calls.</string>
 
     <string name="no_unread_notifications">You have no unread notifications.</string>
