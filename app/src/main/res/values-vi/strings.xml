@@ -172,4 +172,5 @@
     <string name="read_mode_announce">Chỉ báo có thông báo mới</string>
     <string name="selected_apps_title">Ứng dụng được đọc</string>
     <string name="select_apps_button">Chọn ứng dụng</string>
+    <string name="notification_access_required">Vui lòng cấp quyền truy cập thông báo cho %1$s</string>
 </resources>

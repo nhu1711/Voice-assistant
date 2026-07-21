@@ -235,7 +235,7 @@ public class SettingsFragment extends Fragment {
                     // Prompt for permission
                     switchReadNotifications.setChecked(false);
                     startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
-                    Toast.makeText(requireContext(), "Please enable Notification Access for " + getString(R.string.app_name), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), getString(R.string.notification_access_required, getString(R.string.app_name)), Toast.LENGTH_LONG).show();
                     return;
                 }
             }
