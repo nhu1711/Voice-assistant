@@ -68,7 +68,7 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         initViews(view);
         loadPreferences();
-        setupListeners();
+        setupListeners(view);
         setupVoiceAssistant(view);
         return view;
     }
@@ -213,7 +213,11 @@ public class SettingsFragment extends Fragment {
         updateLanguageButtonText();
     }
 
-    private void setupListeners() {
+    private void setupListeners(View view) {
+        view.findViewById(R.id.btn_help).setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), com.example.voiceassistant.ui.activities.HelpActivity.class));
+        });
+
         switchBackgroundMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
             prefs.edit().putBoolean(AppConstants.PREF_BACKGROUND_MODE, isChecked).apply();
             updateService(isChecked);

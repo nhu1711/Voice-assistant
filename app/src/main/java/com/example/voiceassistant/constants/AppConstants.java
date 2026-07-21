@@ -56,6 +56,7 @@ public class AppConstants {
     public static final String PREF_BACKGROUND_MODE = "background_mode";
     public static final String PREF_BATTERY_ALERT = "battery_alert";
     public static final String PREF_NETWORK_ALERT = "network_alert";
+    public static final String PREF_FIRST_RUN = "first_run";
     
     // ===== INTENT ACTIONS =====
     public static final String ACTION_STOP_SERVICE = "com.example.voiceassistant.STOP_SERVICE";
