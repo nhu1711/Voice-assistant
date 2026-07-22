@@ -13,7 +13,7 @@ import com.example.voiceassistant.R;
 import com.example.voiceassistant.constants.AppConstants;
 
 public class SplashActivity extends AppCompatActivity {
-
+    //khai bao : Quản lý Text-to-Speech, dùng để đọc chào mừng
     private com.example.voiceassistant.tts.TTSManager ttsManager;
 
     @Override

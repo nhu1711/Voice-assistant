@@ -173,4 +173,28 @@
     <string name="selected_apps_title">Ứng dụng được đọc</string>
     <string name="select_apps_button">Chọn ứng dụng</string>
     <string name="notification_access_required">Vui lòng cấp quyền truy cập thông báo cho %1$s</string>
+    <string name="speech_not_available">Thiết bị không hỗ trợ nhận diện giọng nói</string>
+    <string name="speech_no_match">Không nhận diện được giọng nói</string>
+    <string name="speech_prompt">Hãy nói điều bạn muốn...</string>
+    <string name="speech_error_audio">Lỗi âm thanh</string>
+    <string name="speech_error_client">Lỗi kết nối</string>
+    <string name="speech_error_insufficient_permissions">Thiếu quyền RECORD_AUDIO</string>
+    <string name="speech_error_network">Lỗi mạng</string>
+    <string name="speech_error_network_timeout">Mạng quá tải</string>
+    <string name="speech_error_no_match">Không nhận diện được</string>
+    <string name="speech_error_recognizer_busy">Hệ thống đang bận</string>
+    <string name="speech_error_server">Lỗi máy chủ</string>
+    <string name="speech_error_speech_timeout">Hết thời gian chờ</string>
+    <string name="speech_error_unknown">Lỗi không xác định: %1$d</string>
+
+    <!-- Voice Responses -->
+    <string name="response_opening_camera">Đang mở camera.</string>
+    <string name="response_opening_emergency">Đang mở màn hình khẩn cấp.</string>
+    <string name="response_opening_settings">Đang mở cài đặt.</string>
+    <string name="response_returning_home">Trở về màn hình chính.</string>
+    <string name="response_closing_app">Đang đóng ứng dụng.</string>
+    <string name="response_help_guidance">Bạn có thể nói: Mở camera, Mở khẩn cấp, Mở cài đặt, hoặc Trở về trang chủ.</string>
+    <string name="response_stopping_detection">Đã dừng nhận diện vật thể và quay về màn hình chính.</string>
+    <string name="response_canceled">Đã hủy lệnh.</string>
+    <string name="response_unknown_command">Xin lỗi, tôi không hiểu lệnh đó. Vui lòng thử lại.</string>
 </resources>

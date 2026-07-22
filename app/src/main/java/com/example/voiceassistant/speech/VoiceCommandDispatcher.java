@@ -46,132 +46,102 @@ public class VoiceCommandDispatcher {
         this.callback = callback;
     }
 
-    /**
-     * Executes the command and returns true if the command resulted in navigation
-     * or closing the app, meaning the current Fragment might be destroyed or hidden.
-     */
     public boolean execute(CommandParser.CommandResult result) {
         Log.d(TAG, "[VOICE] VOICE_INTENT: " + result.getIntent().name());
-        ttsManager.setAssistantListening(false); // Explicitly unblock TTS queue
+        ttsManager.setAssistantListening(false);
         
         switch (result.getIntent()) {
             case OPEN_OBJECT_DETECTION:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Opening Object Detection");
-                speakTranslated("Opening camera.", "Đang mở camera.");
+                processResponse(R.string.response_opening_camera);
                 navigateTo(R.id.nav_object_detection);
                 return true;
                 
             case OPEN_EMERGENCY:
                 if (callback instanceof EmergencyCommandCallback) {
-                    Log.d(TAG, "[VOICE] VOICE_ACTION: Starting SOS");
                     ((EmergencyCommandCallback) callback).onSOSRequested();
                     return false;
                 } else {
-                    Log.d(TAG, "[VOICE] VOICE_ACTION: Opening Emergency");
-                    speakTranslated("Opening emergency screen.", "Đang mở màn hình khẩn cấp.");
+                    processResponse(R.string.response_opening_emergency);
                     navigateTo(R.id.nav_contacts);
                     return true;
                 }
                 
             case OPEN_SETTINGS:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Opening Settings");
-                speakTranslated("Opening settings.", "Đang mở cài đặt.");
+                processResponse(R.string.response_opening_settings);
                 navigateTo(R.id.nav_settings);
                 return true;
                 
             case GO_HOME:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Returning Home");
-                speakTranslated("Returning to the home screen.", "Trở về màn hình chính.");
+                processResponse(R.string.response_returning_home);
                 navigateTo(R.id.nav_home);
                 return true;
                 
             case CLOSE_APPLICATION:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Closing Application");
-                speakTranslated("Closing application.", "Đang đóng ứng dụng.");
+                processResponse(R.string.response_closing_app);
                 activity.finishAffinity();
                 return true;
                 
             case HELP:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Help");
-                speakTranslated("You can say: Open object detection, Open emergency, Open settings, Go home.", 
-                               "Bạn có thể nói: Mở camera, Mở khẩn cấp, Mở cài đặt, hoặc Trở về trang chủ.");
+                processResponse(R.string.response_help_guidance);
                 return false;
                 
             case REPEAT:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Repeat");
                 ttsManager.repeatLastSpeech();
                 return false;
                 
             case CALL:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Call");
                 handleCallCommand(result.getParam());
                 return false;
                 
             case TIME:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Time");
                 handleTimeCommand();
                 return false;
                 
             case BATTERY:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Battery");
                 handleBatteryCommand();
                 return false;
                 
             case READ_NOTIFICATIONS:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Read Notifications");
                 handleReadNotificationsCommand();
                 return false;
                 
             case STOP_OBJECT_DETECTION:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Stop Detection");
-                // Mặc định dừng nhận diện nếu đang ở CameraFragment sẽ được xử lý riêng
-                // Hoặc có thể hiểu là đóng camera -> về trang chủ
-                speakTranslated("Stopping object detection and returning home.", "Đã dừng nhận diện vật thể và quay về màn hình chính.");
+                processResponse(R.string.response_stopping_detection);
                 navigateTo(R.id.nav_home);
                 return true;
                 
             case CANCEL:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Cancel");
-                speakTranslated("Canceled.", "Đã hủy lệnh.");
+                processResponse(R.string.response_canceled);
                 return false;
                 
             case UNKNOWN:
             default:
-                Log.d(TAG, "[VOICE] VOICE_ACTION: Unknown");
-                speakTranslated("I'm sorry. I didn't understand that command. Please try again.", 
-                               "Xin lỗi, tôi không hiểu lệnh đó. Vui lòng thử lại.");
+                processResponse(R.string.response_unknown_command);
                 return false;
         }
     }
 
+    private void processResponse(int stringResId) {
+        String response = activity.getString(stringResId);
+        if (callback != null) callback.onResponse(response);
+        ttsManager.speakNow(response);
+    }
+
     private void navigateTo(int navId) {
-        Log.d(TAG, "[VOICE] VOICE_NAVIGATION to menu item: " + navId);
         BottomNavigationView bottomNav = activity.findViewById(R.id.bottom_navigation);
         if (bottomNav != null) {
             bottomNav.setSelectedItemId(navId);
         }
     }
     
-    private void speakTranslated(String enText, String viText) {
-        String lang = getCurrentLanguage();
-        String text = lang.equals(AppConstants.LANGUAGE_VIETNAMESE) ? viText : enText;
-        Log.d(TAG, "[VOICE] VOICE_TTS: " + text);
-        if (callback != null) callback.onResponse(text);
-        ttsManager.speakNow(text);
-    }
-    
     private void handleCallCommand(String contactName) {
-        Log.d(TAG, "Handling CALL command for: " + contactName);
         ContactManager.ContactInfo contact = contactManager.findContactByName(contactName);
-
         if (contact != null) {
-            Log.d(TAG, "Contact found: " + contact.getName() + " - " + contact.getPhoneNumber());
             String response = activity.getString(R.string.calling_contact, contact.getName());
             if (callback != null) callback.onResponse(response);
             ttsManager.speakNow(response);
             callManager.makeCall(contact.getPhoneNumber(), contact.getName());
         } else {
-            Log.w(TAG, "Contact NOT found in system: " + contactName);
             String response = activity.getString(R.string.contact_not_found, contactName);
             if (callback != null) callback.onResponse(response);
             ttsManager.speakNow(response);
@@ -183,12 +153,9 @@ public class VoiceCommandDispatcher {
             String language = getCurrentLanguage();
             String displayText = TimeFormatter.getDisplayTime(activity);
             String speechText = TimeFormatter.getTimeSpeech(activity, language);
-
             if (callback != null) callback.onResponse(displayText);
             ttsManager.speakNow(speechText);
-            Log.d(TAG, "[VOICE] VOICE_TTS: " + speechText);
         } catch (Exception e) {
-            Log.e(TAG, "Error handling time command", e);
             String errorMsg = activity.getString(R.string.error_time);
             if (callback != null) callback.onResponse(errorMsg);
             ttsManager.speakNow(errorMsg);
@@ -201,18 +168,14 @@ public class VoiceCommandDispatcher {
         String display = activity.getString(R.string.battery_status, batteryManagerHelper.getBatteryLevel());
         if (callback != null) callback.onResponse(display);
         ttsManager.speakNow(response);
-        Log.d(TAG, "[VOICE] VOICE_TTS: " + response);
     }
 
     private void handleReadNotificationsCommand() {
-        List<NotificationRepository.NotificationItem> unread =
-                NotificationRepository.getInstance().getUnreadNotifications();
-
+        List<NotificationRepository.NotificationItem> unread = NotificationRepository.getInstance().getUnreadNotifications();
         if (unread.isEmpty()) {
             String response = activity.getString(R.string.no_unread_notifications);
             if (callback != null) callback.onResponse(response);
             ttsManager.speakNow(response);
-            Log.d(TAG, "[VOICE] VOICE_TTS: " + response);
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append(activity.getString(R.string.reading_notifications, unread.size())).append(". ");
@@ -221,20 +184,14 @@ public class VoiceCommandDispatcher {
             }
             if (callback != null) callback.onResponse(activity.getString(R.string.reading_notifications_ui, unread.size()));
             ttsManager.speakNow(sb.toString());
-            Log.d(TAG, "[VOICE] VOICE_TTS: " + sb.toString());
-
-            // Clear after reading
             NotificationRepository.getInstance().clearNotifications();
         }
     }
 
     private String getCurrentLanguage() {
-        android.content.SharedPreferences prefs = activity.getSharedPreferences(
-                AppConstants.PREF_NAME, Context.MODE_PRIVATE
-        );
+        android.content.SharedPreferences prefs = activity.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         String systemLang = Locale.getDefault().getLanguage();
         String defaultLang = systemLang.equals("vi") ? AppConstants.LANGUAGE_VIETNAMESE : AppConstants.LANGUAGE_ENGLISH;
-
         return prefs.getString(AppConstants.PREF_LANGUAGE, defaultLang);
     }
 }

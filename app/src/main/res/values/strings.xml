@@ -175,4 +175,28 @@
     <string name="selected_apps_title">Apps to Read</string>
     <string name="select_apps_button">Select Apps</string>
     <string name="notification_access_required">Please enable Notification Access for %1$s</string>
+    <string name="speech_not_available">Speech recognition not available on this device</string>
+    <string name="speech_no_match">Speech not recognized</string>
+    <string name="speech_prompt">Please say something...</string>
+    <string name="speech_error_audio">Audio error</string>
+    <string name="speech_error_client">Connection error</string>
+    <string name="speech_error_insufficient_permissions">Missing RECORD_AUDIO permission</string>
+    <string name="speech_error_network">Network error</string>
+    <string name="speech_error_network_timeout">Network timeout</string>
+    <string name="speech_error_no_match">Could not recognize</string>
+    <string name="speech_error_recognizer_busy">System is busy</string>
+    <string name="speech_error_server">Server error</string>
+    <string name="speech_error_speech_timeout">Speech timeout</string>
+    <string name="speech_error_unknown">Unknown error: %1$d</string>
+
+    <!-- Voice Responses -->
+    <string name="response_opening_camera">Opening camera.</string>
+    <string name="response_opening_emergency">Opening emergency screen.</string>
+    <string name="response_opening_settings">Opening settings.</string>
+    <string name="response_returning_home">Returning to the home screen.</string>
+    <string name="response_closing_app">Closing application.</string>
+    <string name="response_help_guidance">You can say: Open object detection, Open emergency, Open settings, Go home.</string>
+    <string name="response_stopping_detection">Stopping object detection and returning home.</string>
+    <string name="response_canceled">Canceled.</string>
+    <string name="response_unknown_command">I\'m sorry. I didn\'t understand that command. Please try again.</string>
 </resources>

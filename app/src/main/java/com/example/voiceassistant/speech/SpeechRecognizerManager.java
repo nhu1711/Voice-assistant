@@ -8,6 +8,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
+import com.example.voiceassistant.R;
 import com.example.voiceassistant.constants.AppConstants;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class SpeechRecognizerManager {
             } catch (Exception e) {
                 Log.e(TAG, "Speech recognition totally unavailable");
                 if (callback != null) {
-                    callback.onError("Thiết bị không hỗ trợ nhận diện giọng nói");
+                    callback.onError(context.getString(R.string.speech_not_available));
                 }
             }
         }
@@ -135,7 +136,7 @@ public class SpeechRecognizerManager {
                     }
                 } else {
                     if (callback != null) {
-                        callback.onError("Không nhận diện được giọng nói");
+                        callback.onError(context.getString(R.string.speech_no_match));
                     }
                 }
             }
@@ -181,7 +182,7 @@ public class SpeechRecognizerManager {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, languageTag);
         intent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, languageTag);
         
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hãy nói điều bạn muốn...");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, context.getString(R.string.speech_prompt));
         intent.putExtra(
             RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS,
             AppConstants.SPEECH_TIMEOUT
@@ -238,25 +239,25 @@ public class SpeechRecognizerManager {
     private String getErrorMessage(int error) {
         switch (error) {
             case SpeechRecognizer.ERROR_AUDIO:
-                return "Lỗi âm thanh";
+                return context.getString(R.string.speech_error_audio);
             case SpeechRecognizer.ERROR_CLIENT:
-                return "Lỗi kết nối";
+                return context.getString(R.string.speech_error_client);
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-                return "Thiếu quyền RECORD_AUDIO";
+                return context.getString(R.string.speech_error_insufficient_permissions);
             case SpeechRecognizer.ERROR_NETWORK:
-                return "Lỗi mạng";
+                return context.getString(R.string.speech_error_network);
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-                return "Mạng quá tải";
+                return context.getString(R.string.speech_error_network_timeout);
             case SpeechRecognizer.ERROR_NO_MATCH:
-                return "Không nhận diện được";
+                return context.getString(R.string.speech_error_no_match);
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                return "Hệ thống đang bận";
+                return context.getString(R.string.speech_error_recognizer_busy);
             case SpeechRecognizer.ERROR_SERVER:
-                return "Lỗi máy chủ";
+                return context.getString(R.string.speech_error_server);
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                return "Hết thời gian chờ";
+                return context.getString(R.string.speech_error_speech_timeout);
             default:
-                return "Lỗi không xác định: " + error;
+                return context.getString(R.string.speech_error_unknown, error);
         }
     }
     

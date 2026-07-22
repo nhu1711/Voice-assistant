@@ -230,7 +230,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
+    //su kien nhan nut micro
     private void setupListeners() {
         btnMicro.setOnClickListener(v -> {
             Log.d(TAG, "[VOICE] VOICE_START");
@@ -762,7 +762,7 @@ public class HomeFragment extends Fragment {
 
     private void startVoiceRecognition() {
         if (!SpeechRecognizer.isRecognitionAvailable(requireContext())) {
-            Toast.makeText(getContext(), "Speech recognition not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.speech_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
         // Làm sạch ô văn bản trước khi nghe mới
@@ -800,8 +800,7 @@ public class HomeFragment extends Fragment {
 
     private void handleDetectCommand() {
         Log.d(TAG, "Handling DETECT command");
-        String lang = getCurrentLanguage();
-        String response = lang.equals("vi") ? "Đang mở chế độ nhận diện vật thể." : "Opening object detection mode.";
+        String response = getString(R.string.response_opening_camera);
         tvResponse.setText(response);
         ttsManager.speak(response);
         
