@@ -75,7 +75,7 @@
     <string name="detection_status_running">Đang nhận diện…</string>
     <string name="detection_status_stopped">Đã dừng nhận diện</string>
     <string name="detection_no_object">Không phát hiện vật thể</string>
-    <string name="detection_pattern">Có %1$s %2$s, %3$s</string>
+    <string name="detection_pattern">Có %1$s %2$s.</string>
     <string name="direction_left">bên trái</string>
     <string name="direction_right">bên phải</string>
     <string name="direction_front">phía trước</string>

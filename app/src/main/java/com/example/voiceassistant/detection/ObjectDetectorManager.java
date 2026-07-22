@@ -39,6 +39,20 @@ public class ObjectDetectorManager {
     private volatile boolean isClosed = false;
     private volatile boolean isDetecting = false;
 
+    // Pre-allocated arrays for TFLite inference to reduce GC pressure
+    private final float[][][] outputBoxes = new float[1][25][4];
+    private final float[][] outputClasses = new float[1][25];
+    private final float[][] outputScores = new float[1][25];
+    private final float[] outputCount = new float[1];
+    
+    // Pre-allocated ByteBuffer and int array
+    private ByteBuffer inputBuffer = null;
+    private final int[] intValues = new int[INPUT_SIZE * INPUT_SIZE];
+
+    public boolean isDetecting() {
+        return isDetecting || isClosed || interpreter == null;
+    }
+
     // COCO Labels map based on EfficientDet-Lite0
     private static final Map<Integer, String> COCO_LABELS = new HashMap<>();
     static {
@@ -177,10 +191,6 @@ public class ObjectDetectorManager {
                 // 1: [1, 25] Classes
                 // 2: [1, 25] Scores
                 // 3: [1] Number of detections
-                float[][][] outputBoxes = new float[1][25][4];
-                float[][] outputClasses = new float[1][25];
-                float[][] outputScores = new float[1][25];
-                float[] outputCount = new float[1];
                 
                 Map<Integer, Object> outputs = new HashMap<>();
                 outputs.put(0, outputBoxes);
@@ -266,10 +276,12 @@ public class ObjectDetectorManager {
     }
     
     private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1 * INPUT_SIZE * INPUT_SIZE * 3);
-        byteBuffer.order(ByteOrder.nativeOrder());
+        if (inputBuffer == null) {
+            inputBuffer = ByteBuffer.allocateDirect(1 * INPUT_SIZE * INPUT_SIZE * 3);
+            inputBuffer.order(ByteOrder.nativeOrder());
+        }
+        inputBuffer.rewind();
         
-        int[] intValues = new int[INPUT_SIZE * INPUT_SIZE];
         bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
         
         int pixel = 0;
@@ -277,12 +289,12 @@ public class ObjectDetectorManager {
             for (int j = 0; j < INPUT_SIZE; ++j) {
                 int val = intValues[pixel++];
                 // TFLite uint8 model takes RGB as raw bytes without float normalization
-                byteBuffer.put((byte) ((val >> 16) & 0xFF));
-                byteBuffer.put((byte) ((val >> 8) & 0xFF));
-                byteBuffer.put((byte) (val & 0xFF));
+                inputBuffer.put((byte) ((val >> 16) & 0xFF));
+                inputBuffer.put((byte) ((val >> 8) & 0xFF));
+                inputBuffer.put((byte) (val & 0xFF));
             }
         }
-        return byteBuffer;
+        return inputBuffer;
     }
     
     private Bitmap rotateBitmap(Bitmap source, int degrees) {

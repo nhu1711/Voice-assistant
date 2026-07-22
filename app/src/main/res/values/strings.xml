@@ -77,7 +77,7 @@
     <string name="detection_status_running">Detecting...</string>
     <string name="detection_status_stopped">Detection stopped</string>
     <string name="detection_no_object">No objects detected</string>
-    <string name="detection_pattern">Detected %1$s %2$s, %3$s</string>
+    <string name="detection_pattern">Detected %1$s %2$s.</string>
     <string name="direction_left">on the left</string>
     <string name="direction_right">on the right</string>
     <string name="direction_front">in front</string>

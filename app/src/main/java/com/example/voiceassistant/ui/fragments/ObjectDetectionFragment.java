@@ -33,7 +33,6 @@ import com.example.voiceassistant.battery.BatteryManagerHelper;
 import com.example.voiceassistant.call.CallManager;
 import com.example.voiceassistant.constants.AppConstants;
 import com.example.voiceassistant.contacts.ContactManager;
-import com.example.voiceassistant.detection.DistanceEstimator;
 import com.example.voiceassistant.detection.LabelTranslator;
 import com.example.voiceassistant.detection.ObjectDetectorManager;
 import com.example.voiceassistant.permissions.PermissionHelper;
@@ -51,7 +50,10 @@ import com.example.voiceassistant.detection.MyCategory;
 import com.example.voiceassistant.detection.MyDetection;
 
 import java.nio.ByteBuffer;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -100,11 +102,8 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     // Các biến lưu thông tin phát âm gần nhất để kiểm soát cooldown
-    private String lastSpokenObjectName = "";
-    private String lastSpokenDirection = "";
-    private DistanceEstimator.DistanceCategory lastSpokenDistanceCategory = null;
+    private final Map<String, Long> spokenObjectsHistory = new HashMap<>();
     private String lastSpokenText = "";
-    private long lastSpeechTime = 0;
     private long lastTimestamp = 0;
 
     @Nullable
@@ -381,6 +380,11 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
                 return;
             }
 
+            if (detectorManager.isDetecting()) {
+                imageProxy.close();
+                return;
+            }
+
             try {
                 // Tự động convert YUV (hoặc bất kỳ format nào được hỗ trợ) sang RGB Bitmap
                 Bitmap frameBitmap = imageProxy.toBitmap();
@@ -437,28 +441,22 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
                 return;
             }
 
-            // Chọn vật thể có kích thước (diện tích hộp) lớn nhất để ưu tiên thông báo
-            MyDetection prominentDetection = null;
-            float maxArea = 0;
+            // Sắp xếp các vật thể từ trái sang phải (dựa trên tọa độ centerX của bounding box)
+            Collections.sort(detections, (d1, d2) -> Float.compare(d1.boundingBox().centerX(), d2.boundingBox().centerX()));
+
+            StringBuilder speechBuilder = new StringBuilder();
+            StringBuilder displayBuilder = new StringBuilder();
+            long currentTime = System.currentTimeMillis();
+            String lang = getCurrentLanguage();
 
             for (MyDetection d : detections) {
-                RectF box = d.boundingBox();
-                float area = box.width() * box.height();
-                if (area > maxArea) {
-                    maxArea = area;
-                    prominentDetection = d;
-                }
-            }
-
-            if (prominentDetection != null && prominentDetection.categories() != null && !prominentDetection.categories().isEmpty()) {
-                MyCategory category = prominentDetection.categories().get(0);
+                if (d.categories() == null || d.categories().isEmpty()) continue;
+                
+                MyCategory category = d.categories().get(0);
                 String enLabel = category.categoryName();
-                String lang = getCurrentLanguage();
                 String translatedLabel = LabelTranslator.translate(enLabel, lang);
-                float score = category.score();
-
-                // Tính toán hướng (trái, phải, phía trước) dựa trên tâm X của vật thể
-                RectF box = prominentDetection.boundingBox();
+                
+                RectF box = d.boundingBox();
                 float centerXNormalized = (box.left + box.right) / 2.0f / imageWidth;
 
                 String direction;
@@ -470,48 +468,36 @@ public class ObjectDetectionFragment extends Fragment implements ObjectDetectorM
                     direction = getString(R.string.direction_front);
                 }
 
-                // Tính toán diện tích tương đối để ước lượng khoảng cách
-                float areaNormalized = (box.width() * box.height()) / (float) (imageWidth * imageHeight);
-                DistanceEstimator.DistanceCategory distCategory;
-                if (areaNormalized > 0.15f) {
-                    distCategory = DistanceEstimator.DistanceCategory.CLOSE;
-                } else if (areaNormalized > 0.04f) {
-                    distCategory = DistanceEstimator.DistanceCategory.MEDIUM;
-                } else {
-                    distCategory = DistanceEstimator.DistanceCategory.FAR;
+                String objectKey = enLabel + "_" + direction;
+                Long lastSpoken = spokenObjectsHistory.get(objectKey);
+
+                if (displayBuilder.length() > 0) {
+                    displayBuilder.append("\n");
                 }
+                displayBuilder.append(getString(R.string.detection_pattern, translatedLabel, direction));
 
-                String distanceText = DistanceEstimator.getDistanceSpeech(requireContext(), distCategory);
-                
-                // Hiển thị kết quả văn bản
-                String displayResult = getString(R.string.detection_pattern, translatedLabel, direction, distanceText);
-                tvDetectionResult.setText(displayResult + String.format(" (%.0f%%)", score * 100));
-
-                // Kiểm soát cooldown chống spam phát thanh
-                long currentTime = System.currentTimeMillis();
-                long timeSinceLastSpeech = currentTime - lastSpeechTime;
-
-                boolean isNewObject = !translatedLabel.equals(lastSpokenObjectName) 
-                        || !direction.equals(lastSpokenDirection) 
-                        || distCategory != lastSpokenDistanceCategory;
-
-                if (isNewObject || timeSinceLastSpeech >= SPEECH_COOLDOWN_MS) {
-                    speakDetection(translatedLabel, direction, distanceText, distCategory);
+                // Kiểm soát cooldown: 5 giây cho mỗi vật thể ở một hướng cụ thể
+                if (lastSpoken == null || (currentTime - lastSpoken >= SPEECH_COOLDOWN_MS)) {
+                    if (speechBuilder.length() > 0) {
+                        speechBuilder.append(", ");
+                    }
+                    speechBuilder.append(translatedLabel).append(" ").append(direction);
+                    spokenObjectsHistory.put(objectKey, currentTime);
                 }
             }
-        });
-    }
+            
+            if (displayBuilder.length() > 0) {
+                tvDetectionResult.setText(displayBuilder.toString());
+            }
 
-    private void speakDetection(String objectName, String direction, String distanceText, DistanceEstimator.DistanceCategory distCategory) {
-        String speechText = getString(R.string.detection_pattern, objectName, direction, distanceText);
-        Log.d(TAG, "[TTS] Speaking: " + speechText);
-        lastSpokenText = speechText;
-        lastSpokenObjectName = objectName;
-        lastSpokenDirection = direction;
-        lastSpokenDistanceCategory = distCategory;
-        lastSpeechTime = System.currentTimeMillis();
-        
-        ttsManager.speak(speechText, getCurrentLanguage());
+            if (speechBuilder.length() > 0) {
+                String prefix = lang.equals("vi") ? "Có " : "Detected ";
+                String speechText = prefix + speechBuilder.toString() + ".";
+                Log.d(TAG, "[TTS] Speaking: " + speechText);
+                lastSpokenText = speechText;
+                ttsManager.speak(speechText, lang);
+            }
+        });
     }
 
     private void repeatLastSpeech() {
