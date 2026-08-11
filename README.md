@@ -50,3 +50,70 @@
 │                      DATA LAYER                             │
 │     Repository / DAO / Room Database / Content Provider     │
 └─────────────────────────────────────────────────────────────┘
+## 🛠️ Công nghệ sử dụng
+
+| Thành phần | Công nghệ |
+|------------|-----------|
+| **Ngôn ngữ** | Java |
+| **IDE** | Android Studio |
+| **Database cục bộ** | Room Database |
+| **Lưu cấu hình** | SharedPreferences |
+| **Speech-to-Text** | SpeechRecognizer API |
+| **Text-to-Speech** | TextToSpeech API |
+| **Danh bạ** | Content Provider |
+| **Camera** | CameraX |
+| **Object Detection** | TensorFlow Lite (EfficientDet Lite) |
+| **GPS** | Fused Location Provider |
+| **SMS** | SmsManager |
+| **Trợ năng** | Accessibility Service |
+| **Nền** | Foreground Service |
+| **Broadcast** | Broadcast Receiver |
+| **Notification** | NotificationListenerService |
+
+---
+
+## 📋 Yêu cầu hệ thống
+
+- **Android 8.0 (API 26)** trở lên
+
+- **Quyền cần thiết:**
+
+| Quyền | Mục đích |
+|-------|----------|
+| `RECORD_AUDIO` | Ghi âm |
+| `CALL_PHONE` | Gọi điện |
+| `READ_CONTACTS` | Đọc danh bạ |
+| `ACCESS_FINE_LOCATION` | Lấy vị trí GPS |
+| `SEND_SMS` | Gửi tin nhắn |
+| `CAMERA` | Camera |
+| `INTERNET` | Kết nối mạng |
+| `FOREGROUND_SERVICE` | Chạy nền |
+| `RECEIVE_BOOT_COMPLETED` | Khởi động khi máy bật |
+| `ACCESS_NETWORK_STATE` | Kiểm tra mạng |
+| `POST_NOTIFICATIONS` | Hiển thị thông báo (Android 13+) |
+
+---
+
+## 🗂️ Nhóm lệnh hỗ trợ
+
+| Nhóm lệnh | Ví dụ | Phản hồi hệ thống |
+|-----------|-------|-------------------|
+| **Gọi điện** | "Gọi cho mẹ" / "Call Mom" | Tìm liên hệ và thực hiện cuộc gọi |
+| **Thông tin** | "Mấy giờ rồi?" / "What time is it?" | Đọc thời gian hiện tại |
+| **Pin** | "Pin còn bao nhiêu?" / "Battery level" | Đọc phần trăm pin |
+| **SOS** | "Cứu tôi" / "Help me" | Bắt đầu quy trình SOS |
+| **Nhận diện** | "Nhận diện vật thể" / "Detect objects" | Mở camera và thông báo vật thể |
+| **Điều hướng** | "Mở cài đặt" / "Open settings" | Mở màn hình cài đặt |
+| **Trợ giúp** | "Hướng dẫn" / "Help" | Đọc danh sách lệnh |
+| **Nhắc lại** | "Nhắc lại" / "Repeat" | Đọc lại phản hồi cuối |
+| **Đọc thông báo** | "Đọc thông báo" / "Read notifications" | Đọc thông báo đã lưu |
+
+---
+
+## 👥 Thành viên nhóm
+
+| STT | MSSV | Họ tên | Vai trò |
+|-----|------|--------|---------|
+| 1 | 23110065 | Mai Trần Thùy Trang | UI/UX, Presentation Layer |
+| 2 | 23110051 | Trần Thị Tố Như | Business Logic, Services |
+| 3 | 23110004 | Võ Nguyễn Ngọc Bích | Data Layer, Database |
