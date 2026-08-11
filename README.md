@@ -1,359 +1,253 @@
-🎙️ GIỚI THIỆU ỨNG DỤNG VOICE ASSISTANT
-📱 TỔNG QUAN
-Voice Assistant là một ứng dụng Android được phát triển nhằm hỗ trợ người cao tuổi và người khiếm thị trong việc sử dụng điện thoại thông minh. Ứng dụng cho phép người dùng thực hiện các tác vụ hàng ngày thông qua giọng nói và nhận phản hồi bằng âm thanh, từ đó giảm sự phụ thuộc vào thao tác cảm ứng và nâng cao khả năng tiếp cận công nghệ.
+#VOICE ASSISTANT FOR ELDERLY AND VISUALLY IMPAIRED PEOPLE
+An Android voice assistant application designed to help elderly and visually impaired users interact with their smartphones through speech. The app reduces dependency on touch operations and enhances accessibility to modern technology.
 
-⚙️ CÁC TÍNH NĂNG CHÍNH
-1. Tương tác bằng giọng nói
-Người dùng nhấn nút Micro để kích hoạt nhận diện giọng nói. Hệ thống sử dụng Android SpeechRecognizer để chuyển giọng nói thành văn bản, hiển thị kết quả trên màn hình và phân tích lệnh bằng CommandParser. Mọi phản hồi đều được đọc lại bằng TextToSpeech bằng cả hai ngôn ngữ Tiếng Việt và Tiếng Anh.
+#MOTIVATION
+Elderly and visually impaired people often face significant difficulties when using smartphones. Small text sizes, complex touch operations, and difficulty locating applications on the screen create barriers to accessing modern technology. According to the World Health Organization, approximately 2.2 billion people worldwide have some form of visual impairment. This project aims to bridge the accessibility gap by providing a simple, voice-driven interface that allows users to perform daily tasks with minimal visual interaction.
 
-2. Gọi điện thoại
-Người dùng có thể nói câu lệnh như "Gọi cho mẹ" hoặc "Call Mom". Ứng dụng sẽ tìm kiếm liên hệ trong danh bạ thiết bị và thực hiện cuộc gọi sau khi được cấp quyền.
+#FEATURES
+Voice Interaction
+Users tap the microphone button to activate speech recognition. The system converts speech to text using Android SpeechRecognizer, displays the recognized text on screen, and parses the command using CommandParser. All responses are read aloud using TextToSpeech in both Vietnamese and English.
 
-3. Đọc thời gian và pin
-Các lệnh như "Mấy giờ rồi?", "What time is it?", "Pin còn bao nhiêu?" hoặc "Battery level" sẽ kích hoạt hệ thống đọc thời gian hiện tại hoặc phần trăm pin, kèm theo thông tin về trạng thái sạc hoặc pin yếu.
+Phone Calling
+Users can say commands such as "Call Mom" or "Gọi cho mẹ". The application searches Android contacts and initiates a phone call after the required permissions are granted. Voice feedback confirms the action before the call is placed.
 
-4. Quản lý liên hệ khẩn cấp
-Người dùng có thể thêm, sửa hoặc xóa nhiều liên hệ khẩn cấp với mức độ ưu tiên. Dữ liệu được lưu trữ cục bộ trong Room Database thông qua Repository và DAO.
+Time and Battery Information
+Voice commands can request the current time or battery percentage. The result is shown on screen and read aloud, including charging status or low-battery warnings when the battery falls below 20 percent.
 
-5. Tính năng SOS khẩn cấp
-SOS có thể được kích hoạt bằng giọng nói (ví dụ: "Cứu tôi", "Help me") hoặc qua giao diện. Hệ thống hiển thị đếm ngược 5 giây để người dùng có thể hủy. Nếu không hủy, ứng dụng sẽ tự động gọi đến liên hệ có ưu tiên cao nhất, lấy vị trí GPS hiện tại và gửi tin nhắn SMS với đường dẫn Google Maps đến tất cả các liên hệ khẩn cấp.
+Emergency Contact Management
+Users can add, edit, and delete multiple emergency contacts. Each contact can be assigned a priority value from 1 to 5, with lower numbers indicating higher priority. Data is stored locally in Room Database through repository and DAO pattern.
 
-6. Nhận diện vật thể xung quanh
-Ứng dụng sử dụng CameraX và mô hình EfficientDet Lite (MediaPipe/TensorFlow Lite) để nhận diện vật thể trong khung hình camera. Kết quả được hiển thị và đọc thành tiếng, giúp người khiếm thị nhận biết các vật thể xung quanh.
+Emergency SOS
+SOS can be activated by voice commands such as "Help me" or "Cứu tôi", or through the interface button. A five-second countdown allows cancellation before the emergency workflow begins. If not cancelled, the system calls the highest-priority available contact, obtains the current GPS location, and sends an emergency SMS with a Google Maps link to all registered emergency contacts.
 
-7. Chạy nền và cảnh báo hệ thống
-Khi bật chế độ nền, ứng dụng chạy Foreground Service để duy trì hoạt động và nhận các sự kiện hệ thống như pin yếu hoặc mất kết nối mạng thông qua BroadcastReceiver.
+Object Detection
+CameraX supplies real-time frames to the on-device object detector using the bundled EfficientDet Lite model with TensorFlow Lite. Detected objects are displayed on screen with confidence scores and spoken aloud to help users understand their surroundings. This feature is particularly useful for visually impaired users navigating unfamiliar environments.
 
-8. Đọc thông báo
-Ứng dụng có thể đọc thông báo từ các ứng dụng được người dùng chọn (ví dụ: Zalo, Messenger) sau khi được cấp quyền Notification Access trong cài đặt hệ thống.
+Background Assistance
+VoiceAssistantService runs as a foreground service when background mode is enabled. It keeps system alerts active and displays a persistent notification. The service monitors battery level and network connectivity through a dynamically registered BroadcastReceiver, announcing low battery and network loss or restoration according to user settings.
 
-9. Giao diện thân thiện
-Giao diện được thiết kế với nút bấm lớn, nhãn rõ ràng, màu sắc tương phản cao, thanh điều hướng dưới cùng, hiệu ứng hoạt hình khi lắng nghe và hỗ trợ song ngữ để giảm khó khăn về thị giác và thao tác.
+Notification Reading
+NotificationListenerService can announce notifications from applications selected by the user. Two reading modes are available: full content reading and brief announcement mode. This feature requires notification-access permission to be enabled in Android system settings.
 
-🗂️ CÁC NHÓM LỆNH ĐƯỢC HỖ TRỢ
-Nhóm lệnh	Ví dụ	Phản hồi hệ thống
-Gọi điện	"Gọi cho mẹ" / "Call Mom"	Tìm liên hệ và thực hiện cuộc gọi
-Thông tin	"Mấy giờ rồi?" / "Battery level"	Đọc thời gian hiện tại hoặc mức pin
-SOS	"Cứu tôi" / "Help me"	Bắt đầu quy trình SOS có thể hủy
-Nhận diện	"Nhận diện vật thể" / "Detect objects"	Mở camera và thông báo vật thể
-Điều hướng	"Mở cài đặt" / "Trở về trang chủ"	Điều hướng đến màn hình tương ứng
-Hỗ trợ	"Hướng dẫn" / "Help"	Đọc danh sách lệnh có thể sử dụng
-Nhắc lại	"Nhắc lại" / "Repeat"	Đọc lại phản hồi cuối cùng
-Thông báo	"Đọc thông báo" / "Read notifications"	Đọc các thông báo đã lưu gần đây
-🏗️ KIẾN TRÚC ỨNG DỤNG
-Ứng dụng được xây dựng theo mô hình ba tầng:
+Accessibility Interface
+The application uses large buttons, clear labels, high-contrast colors, bottom navigation, listening animation, and bilingual settings to reduce visual and interaction difficulty. All critical actions provide both visual and audio feedback.
 
-Tầng trình bày (Presentation Layer): Chứa các Activity, Fragment và Adapter để hiển thị giao diện và tương tác với người dùng.
+#SUPPORTED COMMANDS
+Call Commands
+Example: "Call Mom", "Gọi cho mẹ"
+System Response: Find contact and start call
 
-Tầng logic nghiệp vụ (Business Logic Layer): Quản lý các chức năng chính như nhận diện giọng nói, TTS, gọi điện, SOS, định vị, thông báo và nhận diện vật thể.
+Information Commands
+Example: "What time is it?", "Mấy giờ rồi?"
+System Response: Read current time aloud
 
-Tầng dữ liệu (Data Layer): Quản lý lưu trữ dữ liệu cục bộ thông qua Room Database, Repository, SharedPreferences và Content Provider.
+Battery Commands
+Example: "Battery level", "Pin còn bao nhiêu?"
+System Response: Read battery percentage aloud
 
-✅ KẾT QUẢ ĐẠT ĐƯỢC
-Nhóm đã hoàn thành một bản prototype Android hoạt động, tích hợp đầy đủ các tính năng:
+SOS Commands
+Example: "Help me", "Cứu tôi"
+System Response: Start cancellable SOS workflow
 
-Nhận diện giọng nói và TTS song ngữ
+Detection Commands
+Example: "Detect objects", "Nhận diện vật thể"
+System Response: Open camera and announce detected objects
 
-Gọi điện từ danh bạ
+Navigation Commands
+Example: "Open settings", "Go home", "Mở cài đặt"
+System Response: Navigate to corresponding screen
 
-Đọc thời gian và pin
+Help Commands
+Example: "Help", "Hướng dẫn"
+System Response: Read available command list
 
-Quản lý liên hệ khẩn cấp
+Repeat Commands
+Example: "Repeat", "Nhắc lại"
+System Response: Repeat the last response
 
-Quy trình SOS với đếm ngược, gọi điện, GPS và SMS
+Notification Commands
+Example: "Read notifications", "Đọc thông báo"
+System Response: Read saved recent notifications
 
-Nhận diện vật thể thời gian thực
+#SYSTEM ARCHITECTURE
+The application follows a three-layer architecture:
 
-Cảnh báo hệ thống và đọc thông báo
+Presentation Layer
+Contains Activities, Fragments, and Adapters responsible for displaying the user interface and handling user interactions. Main components include MainActivity, ContactsActivity, DetectionActivity, SettingsActivity, and HomeFragment.
 
-Ứng dụng được kiểm thử trên thiết bị Android thực tế để đảm bảo các chức năng nhạy cảm như camera, micro, cuộc gọi, SMS, GPS và quyền truy cập thông báo hoạt động chính xác. Mã nguồn được tổ chức rõ ràng thành các Manager, Service, Repository, DAO, Activity và Fragment giúp dễ dàng bảo trì và mở rộng.
+Business Logic Layer
+Contains Managers, Services, and Command Handlers that implement core functionality. Key components include SpeechRecognizerManager for speech-to-text, TTSManager for text-to-speech, CallManager for phone calls, ContactManager for contact lookup, SOSManager for emergency workflows, LocationManagerHelper for GPS, and ObjectDetectionManager for camera-based object recognition.
 
-🎯 LỢI ÍCH VÀ HẠN CHẾ
-Lợi ích
-Giao diện đơn giản, dễ sử dụng cho người cao tuổi và người khiếm thị
+Data Layer
+Manages local data storage through Room Database for emergency contacts, SharedPreferences for user settings, and Content Provider for accessing system contacts. Repository pattern abstracts database operations through EmergencyContactRepository.
 
-Nút bấm lớn và phản hồi giọng nói giúp giảm khó khăn trong thao tác
+#TECHNOLOGY STACK
+Programming Language: Java
 
-Tính năng SOS tích hợp nhiều bước (ưu tiên, đếm ngược, gọi, GPS, SMS) chỉ trong một quy trình
+IDE: Android Studio
 
-Dữ liệu và mô hình nhận diện được lưu trữ cục bộ, không cần máy chủ
+Minimum SDK: Android 8.0 (API 26)
 
-Kiến trúc phân tầng giúp dễ bảo trì và phát triển
+Local Database: Room Database
 
-Hạn chế
-Chưa hỗ trợ kích hoạt qua nút trợ năng Accessibility hoặc từ khóa đánh thức "luôn lắng nghe"
+Configuration Storage: SharedPreferences
 
-Vẫn phải nhấn nút Micro để bắt đầu nhận diện giọng nói
+Speech-to-Text: SpeechRecognizer API
 
-Một số tính năng phụ thuộc vào quyền, SIM, GPS, camera và quyền truy cập thông báo
+Text-to-Speech: TextToSpeech API
 
-Nhận diện giọng nói và vật thể có thể bị ảnh hưởng bởi tiếng ồn, ánh sáng, góc camera, hiệu suất thiết bị và độ chính xác của mô hình
+Contacts Access: Content Provider
 
-Tóm lại: Voice Assistant là một ứng dụng trợ lý giọng nói chuyên biệt, hướng đến việc hỗ trợ người cao tuổi và người khiếm thị trong các tác vụ hàng ngày, với các tính năng thiết thực và giao diện thân thiện. 🚀
+Camera: CameraX
 
-viết cho tôi read me của voice assistant
-🗣️ Voice Assistant for Elderly and Visually Impaired People
-https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white
-https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white
-https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
-https://img.shields.io/badge/License-MIT-green.svg
+Object Detection: TensorFlow Lite (EfficientDet Lite)
 
-📱 Giới thiệu
-Voice Assistant là một ứng dụng Android được phát triển nhằm hỗ trợ người cao tuổi và người khiếm thị trong việc sử dụng điện thoại thông minh. Ứng dụng cho phép người dùng thực hiện các tác vụ hàng ngày thông qua giọng nói và nhận phản hồi bằng âm thanh, từ đó giảm sự phụ thuộc vào thao tác cảm ứng và nâng cao khả năng tiếp cận công nghệ.
+GPS Location: Fused Location Provider
 
-🎯 Mục tiêu
-Đơn giản hóa - Giao diện lớn, rõ ràng, dễ sử dụng
+SMS: SmsManager
 
-Trợ năng - Hỗ trợ người khiếm thị bằng giọng nói
+Accessibility: Accessibility Service
 
-An toàn - Tính năng SOS khẩn cấp với gửi vị trí GPS
+Background Service: Foreground Service
 
-Tiện lợi - Thực hiện cuộc gọi, kiểm tra thời gian và pin bằng giọng nói
+System Events: Broadcast Receiver
 
-Nhận diện - Phát hiện vật thể xung quanh để hỗ trợ di chuyển
+Notification Listening: NotificationListenerService
 
-✨ Tính năng chính
-🎤 Tương tác bằng giọng nói
-Nhận diện giọng nói bằng Android SpeechRecognizer
+Permission Management: ActivityResultContracts
 
-Phản hồi bằng giọng nói qua Text-to-Speech (TTS)
-
-Hỗ trợ cả hai ngôn ngữ: Tiếng Việt và Tiếng Anh
-
-Hiển thị văn bản nhận diện trên màn hình
-
-📞 Gọi điện thoại
-Ra lệnh bằng giọng nói: "Gọi cho mẹ" / "Call Mom"
-
-Tìm kiếm liên hệ trong danh bạ thiết bị
-
-Thực hiện cuộc gọi qua Intent.ACTION_CALL
-
-⏰ Đọc thời gian và pin
-"Mấy giờ rồi?" / "What time is it?" → Đọc thời gian hiện tại
-
-"Pin còn bao nhiêu?" / "Battery level" → Đọc phần trăm pin
-
-Thông báo khi pin yếu (<20%)
-
-🚨 SOS Khẩn cấp
-Kích hoạt bằng giọng nói: "Cứu tôi" / "Help me"
-
-Đếm ngược 5 giây để hủy kích hoạt
-
-Gọi đến liên hệ khẩn cấp có mức ưu tiên cao nhất
-
-Gửi SMS với vị trí GPS hiện tại (Google Maps link)
-
-Gửi đến tất cả liên hệ khẩn cấp đã đăng ký
-
-📷 Nhận diện vật thể
-Sử dụng CameraX và TensorFlow Lite (EfficientDet Lite)
-
-Nhận diện vật thể xung quanh trong thời gian thực
-
-Đọc tên vật thể bằng giọng nói
-
-Hiển thị tên và độ tin cậy trên màn hình
-
-📱 Quản lý liên hệ khẩn cấp
-Thêm, sửa, xóa liên hệ khẩn cấp
-
-Thiết lập mức độ ưu tiên (1: cao nhất)
-
-Lưu trữ trong Room Database
-
-Tối đa 5 liên hệ khẩn cấp
-
-🔔 Đọc thông báo
-Đọc thông báo từ các ứng dụng được chọn (Zalo, Messenger...)
-
-Hai chế độ đọc: Đọc đầy đủ và Chỉ thông báo
-
-Yêu cầu quyền Notification Access
-
-⚙️ Chạy nền và cảnh báo
-Foreground Service duy trì ứng dụng chạy nền
-
-BroadcastReceiver nhận sự kiện hệ thống:
-
-🔋 Pin yếu (<20%): Đọc cảnh báo
-
-📶 Mất kết nối mạng: Đọc cảnh báo
-
-🔄 Khởi động lại thiết bị: Tự động khởi động service
-
-♿ Accessibility Service
-Hỗ trợ người khiếm thị qua nút trợ năng hệ thống
-
-Điều hướng bằng giọng nói
-
-Giao diện chữ lớn, màu sắc tương phản cao
-
-🏗️ Kiến trúc hệ thống
-Ứng dụng được phát triển theo mô hình ba tầng (Layered Architecture):
-
-text
-┌─────────────────────────────────────────────────────────────┐
-│                   PRESENTATION LAYER (UI)                   │
-│          Activities / Fragments / Adapters                  │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   BUSINESS LOGIC LAYER                      │
-│    Services / Managers / Command Handlers / Use Cases       │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      DATA LAYER                             │
-│     Repository / DAO / Room Database / Content Provider     │
-└─────────────────────────────────────────────────────────────┘
-📦 Cấu trúc thư mục
+#PROJECT STRUCTURE
 text
 app/src/main/java/com/example/voiceassistant/
 │
-├── ui/                    # Giao diện người dùng
-│   ├── activities/        # Activities (Main, Contacts, Detection...)
-│   ├── fragments/         # Fragments (Home, Settings...)
-│   └── adapters/          # Adapters
+├── ui/
+│   ├── activities/
+│   │   ├── MainActivity.java
+│   │   ├── ContactsActivity.java
+│   │   ├── DetectionActivity.java
+│   │   └── SettingsActivity.java
+│   ├── fragments/
+│   │   ├── HomeFragment.java
+│   │   └── SettingsFragment.java
+│   └── adapters/
+│       └── EmergencyContactAdapter.java
 │
-├── services/              # Android Services
-│   ├── VoiceAssistantService.java       # Foreground Service
-│   └── AppNotificationListenerService.java # Notification Listener
+├── services/
+│   ├── VoiceAssistantService.java
+│   └── AppNotificationListenerService.java
 │
-├── receivers/             # Broadcast Receivers
+├── receivers/
 │   └── SystemBroadcastReceiver.java
 │
-├── speech/                # Speech-to-Text
+├── speech/
 │   ├── SpeechRecognizerManager.java
 │   ├── CommandParser.java
 │   └── VoiceCommandDispatcher.java
 │
-├── tts/                   # Text-to-Speech
+├── tts/
 │   └── TTSManager.java
 │
-├── call/                  # Call Manager
+├── call/
 │   └── CallManager.java
 │
-├── contacts/              # Contact Manager
+├── contacts/
 │   └── ContactManager.java
 │
-├── emergency/             # SOS Manager
+├── emergency/
 │   └── EmergencyManager.java
 │
-├── detection/             # Object Detection
+├── detection/
 │   └── ObjectDetectionManager.java
 │
-├── location/              # Location Manager
+├── location/
 │   └── LocationManagerHelper.java
 │
-├── battery/               # Battery Manager
+├── battery/
 │   └── BatteryManagerHelper.java
 │
-├── sms/                   # SMS Manager
+├── sms/
 │   └── SmsManagerHelper.java
 │
-├── data/                  # Data Layer
-│   ├── database/          # Room Database
+├── data/
+│   ├── database/
 │   │   ├── AppDatabase.java
 │   │   ├── dao/
+│   │   │   └── EmergencyContactDao.java
 │   │   └── entity/
-│   ├── repository/        # Repository Pattern
-│   └── preferences/       # SharedPreferences
+│   │       └── EmergencyContact.java
+│   ├── repository/
+│   │   └── EmergencyContactRepository.java
+│   └── preferences/
+│       └── AppPreferences.java
 │
-├── permissions/           # Permission Helper
+├── permissions/
 │   └── PermissionHelper.java
 │
-├── utils/                 # Utilities
+├── utils/
 │   └── LocaleHelper.java
 │
-└── constants/             # Constants
+└── constants/
     └── AppConstants.java
-🛠️ Công nghệ sử dụng
-Thành phần	Công nghệ
-Ngôn ngữ	Java
-IDE	Android Studio
-Database cục bộ	Room Database
-Lưu cấu hình	SharedPreferences
-Speech-to-Text	SpeechRecognizer API
-Text-to-Speech	TextToSpeech API
-Danh bạ	Content Provider
-Camera	CameraX
-Object Detection	TensorFlow Lite (EfficientDet Lite)
-GPS	Fused Location Provider
-SMS	SmsManager
-Trợ năng	Accessibility Service
-Nền	Foreground Service
-Broadcast	Broadcast Receiver
-Notification	NotificationListenerService
-📋 Yêu cầu hệ thống
-Android 8.0 (API 26) trở lên
+#SYSTEM REQUIREMENTS
+Android 8.0 (API 26) or higher
 
-Quyền cần thiết:
+Required Permissions:
 
-RECORD_AUDIO - Ghi âm
+RECORD_AUDIO for voice recording
 
-CALL_PHONE - Gọi điện
+CALL_PHONE for making calls
 
-READ_CONTACTS - Đọc danh bạ
+READ_CONTACTS for contact lookup
 
-ACCESS_FINE_LOCATION - Lấy vị trí GPS
+ACCESS_FINE_LOCATION for GPS location
 
-SEND_SMS - Gửi tin nhắn
+SEND_SMS for emergency messages
 
-CAMERA - Camera
+CAMERA for object detection
 
-INTERNET - Kết nối mạng
+INTERNET for network connectivity
 
-FOREGROUND_SERVICE - Chạy nền
+FOREGROUND_SERVICE for background operation
 
-RECEIVE_BOOT_COMPLETED - Khởi động khi máy bật
+RECEIVE_BOOT_COMPLETED for auto-start on boot
 
-ACCESS_NETWORK_STATE - Kiểm tra mạng
+ACCESS_NETWORK_STATE for network monitoring
 
-POST_NOTIFICATIONS - Hiển thị thông báo (Android 13+)
+POST_NOTIFICATIONS for notifications (Android 13+)
 
-🚀 Cài đặt và chạy
-1. Clone dự án
-bash
+#INSTALLATION AND SETUP
+Clone the repository:
 git clone https://github.com/nhu1711/Voice-assistant.git
 cd Voice-assistant
-2. Mở bằng Android Studio
-Mở Android Studio
 
-Chọn Open an Existing Project
+Open with Android Studio:
+Open Android Studio
+Select "Open an Existing Project"
+Choose the project directory
 
-Chọn thư mục dự án
+Build and run:
+Build > Make Project
+Run > Run 'app'
 
-3. Build và chạy
-bash
-# Sync Gradle
-Build → Make Project
+Permission setup:
+The application requests necessary permissions automatically. Some permissions need to be granted manually:
 
-# Chạy trên thiết bị
-Run → Run 'app'
-4. Cấp quyền
-Ứng dụng sẽ tự động yêu cầu các quyền cần thiết. Một số quyền cần được cấp thủ công:
+Notification Access: Settings > Apps > Voice Assistant > Notification Access > Enable
 
-Notification Access: Vào Cài đặt → Ứng dụng → Voice Assistant → Quyền truy cập thông báo → Bật
+Accessibility Service: Settings > Accessibility > Voice Assistant > Enable
 
-Accessibility Service: Vào Cài đặt → Trợ năng → Voice Assistant → Bật
+#TEAM MEMBERS
+Student ID: 23110004
+Name: Vo Nguyen Ngoc Bich
+Role: Data Layer, Database Design, Room Implementation, Repository Pattern
 
-🗂️ Nhóm lệnh hỗ trợ
-Nhóm lệnh	Ví dụ	Phản hồi hệ thống
-Gọi điện	"Gọi cho mẹ" / "Call Mom"	Tìm liên hệ và thực hiện cuộc gọi
-Thông tin	"Mấy giờ rồi?" / "What time is it?"	Đọc thời gian hiện tại
-Pin	"Pin còn bao nhiêu?" / "Battery level"	Đọc phần trăm pin
-SOS	"Cứu tôi" / "Help me"	Bắt đầu quy trình SOS
-Nhận diện	"Nhận diện vật thể" / "Detect objects"	Mở camera và thông báo vật thể
-Điều hướng	"Mở cài đặt" / "Open settings"	Mở màn hình cài đặt
-Trợ giúp	"Hướng dẫn" / "Help"	Đọc danh sách lệnh
-Nhắc lại	"Nhắc lại" / "Repeat"	Đọc lại phản hồi cuối
-Đọc thông báo	"Đọc thông báo" / "Read notifications"	Đọc thông báo đã lưu
-👥 Thành viên nhóm
-STT	MSSV	Họ tên	Vai trò
-1	23110065	Mai Trần Thùy Trang	UI/UX, Presentation Layer
-2	23110051	Trần Thị Tố Như	Business Logic, Services
-3	23110004	Võ Nguyễn Ngọc Bích	Data Layer, Database
+Student ID: 23110051
+Name: Tran Thi To Nhu
+Role: Business Logic Layer, Services, Command Processing, SOS Workflow
+
+Student ID: 23110065
+Name: Mai Tran Thuy Trang
+Role: UI/UX Design, Presentation Layer, Activities, Fragments, Adapters
+
+#ACKNOWLEDGMENT
+This project was completed as the final assignment for the Mobile Programming course at Ho Chi Minh City University of Technology and Engineering. We would like to express our sincere gratitude to our instructor, MSc. Truong Thi Ngoc Phuong, for her invaluable guidance, enthusiastic support, and professional direction throughout the development process. Her dedication and extensive experience have been an important foundation, helping our group effectively apply theoretical knowledge to practice and meet the requirements of the topic.
